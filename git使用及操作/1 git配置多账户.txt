@@ -1,0 +1,37 @@
+git安装可以略过，这里主要写一下多账户的问题
+
+针对不同项目，可能出现需要使用git多账户的情况（比如代码托管在多平台），尤其是区分公司项目和个人项目时，多账户切换能省很多事
+当然了，可以使用同样的账户就无需烦恼了
+
+1.git账户切换：
+git config --global user.name '账户'
+git config --global user.email '邮箱'
+账户邮箱切换比较简单，注意账户和邮箱确定一个用户，要同时切换
+
+2.git多账户配置多ssh：
+账户切换比较简单，复杂的是ssh信息需要保证正确，可以通过修改rsa密钥文件名称不同，以及添加config配置识别不同项目使用不同rsa密钥来处理
+修改不同rsa密钥文件名：
+ssh-keygen -t rsa -C '个人项目邮箱' -f ~/.ssh/github_id_rsa      // 个人github账号ssh
+ssh-keygen -t rsa -C '公司项目邮箱' -f ~/.ssh/gitee_id_rsa        // 公司gitee账户ssh（也可不改                                                                                                  名，默认为id_rsa）
+添加密钥时需要输入密码，这个稍微注意即可，命令行操作git貌似需要一直输入密码
+
+添加配置文件（config文件）
+文件内容为：
+# gitee
+Host git.leading.io
+HostName git.leading.io
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa
+# github
+Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/github_id_rsa
+这里HostName是实际的代码仓库域名（ssh地址），Host是命令行中代码仓库的域名，所以不仅可以配置不同代码托管平台的账户rsa密钥，相同平台也可以配置不同rsa密钥，将Host改成不一致，命令行中注意区分即可
+
+3.测试ssh是否配置成功
+ssh -T git@git.leading.io
+ssh -T git@github.com
+
+3.总结：
+在生成并配置了不同账户的ssh信息后，只要切换不同账户，即可以针对不同项目使用不同的git账户了，最多再考虑下相同代码平台下，命令行不同Host即可

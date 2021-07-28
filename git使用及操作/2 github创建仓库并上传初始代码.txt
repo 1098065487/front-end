@@ -1,0 +1,16 @@
+1.git上创建空的代码仓库，并配置好ssh，保证联通
+
+2.本地选择空文件夹，在其中打开git bash：
+1）初始化仓库
+git init
+2）建立本地和github项目连接
+git remote add origin git@github.com:109806... （地址是git项目ssh地址）
+3）同步git项目到本地
+git pull origin master (master是仓库新分支，初始分支为main，也可修改默认分支)
+4）将代码移入本地文件夹
+5）将本地文件添加到缓存区
+git add . （点表示全部检查，也可以指定文件）
+6）提交文件并添加备注
+git commit -m 'init' （init是初次提交备注）
+7）将提交的代码推送到当前分支
+git push origin master
