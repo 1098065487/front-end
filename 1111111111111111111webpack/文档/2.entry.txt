@@ -1,0 +1,20 @@
+1.单个入口语法：entry: string | [string]
+1）entry: './path/my/entry/file.js'
+     简写：entry: { main: './path/my/entry/file.js' }
+2）一次依赖多个文件，创建一个chunk时，可以用数组：
+     entry: [ './src/file1.js', './src/file2.js' ]
+单个入口拓展和调整配置灵活性不大
+
+2.对象语法：entry: { <entryCgunkName> string | [string] } | {}
+对象语法比较繁琐，却是定义入口拓展性最好的方式
+1）分离app(应用程序)和vendor(第三方库)入口
+entry: {
+    main: './src/app.js',
+    vendor: './src/vendor.js'
+}
+2）多页应用：
+entry: {
+    pageOne: './src/pageOne/index.js',
+    pageTwo: './src/pageTwo/index.js',
+    pageThree: '/src/pageThree/index.js'
+}

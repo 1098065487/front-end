@@ -1,0 +1,24 @@
+js继承理解可以划分两部分：属性和方法的继承
+（这种理解实际应该是即对也不对的，继承应该分两部分：父类的实例属性方法，父类原型对象上的属性方法，针对父类实例属性方法，借助于构造函数，保证实例属性和方法的特有，针对父类原型上的属性方法，借助于原型链，一般让子类原型对象指向Object.create(父类原型对象)）
+（再者，为什么我会有第一次理解的偏差，因为实际在定义构造函数时，一般将属性放在构造函数内，保证new实例获取属性的特异性，特别针对引用类型，而方法一般更乐意提取到上层原型对象中去，即使用原型链，这样做也是为了函数复用）
+
+1.属性继承：
+属性继承还是借助于构造函数（原型链上的引用属性地址不变，一变皆变）：
+function Parent(name) {
+    this.name = name;
+}
+function Child(name) {
+    Parent.call(this, name);
+}
+var child1 = new Child('Tom');
+
+2.方法继承：
+方法继承还是借助于原型链（构造中的方法，实例化一次执行创建一次）
+Parent.prototype.getName = function() { console.log(this.name) };
+function extend(child, parent) {
+    child.prototype = Object.create(parent.prototype);
+    child.prototype.constructor = child;
+}
+extend(Child, Parent);
+var child2 = new Child('Jerry');
+child2.getName();

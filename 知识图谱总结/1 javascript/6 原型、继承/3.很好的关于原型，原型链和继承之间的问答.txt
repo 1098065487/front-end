@@ -1,0 +1,17 @@
+1.对js原型和原型链的理解
+js原型是为其他对象提供共享属性访问的对象，在创建对象时，每个对象都包含一个隐式的引用指向他的原型对象或null
+原型也是对象，因此也有它的原型，这样构成一个原型链
+
+2.原型链的作用
+在访问一个对象的属性时，实际是在查询原型链，这个对象是原型链上的第一个元素，先检查是否包含属性名，是则返回，否则继续检查原型链第二个元素，以此类推
+
+3.如何实现原型继承
+1）通过Object.create()或者Object.setPrototypeOf显式的继承另一个对象，将他设置为原型
+2）通过constructor构造函数，在new实例化对象时，实例对象自动继承constructor的prototype为原型，es6中类的写法，本质和constructor一样
+
+4.ConstructorB如何继承ConstructorA（构造函数之间的继承）
+js中的继承，是对象和对象之间的继承，constructor的主要用途是初始化对象的属性
+两个constructor之间的继承，需要分开两个步骤：
+1）第一步，编写新的constructor，将两个constructor通过call/apply的方式，合并属性初始化，按照超类优先的顺序
+2）第二步，取出超类和子类的原型对象，通过Object.create或Object.setPrototypeOf显式原型继承的方式，设置子类原型为超类原型
+这个过程手动编写比较繁琐，建议使用es6通过的新特性class和extends去实现

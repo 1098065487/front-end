@@ -1,0 +1,22 @@
+1.背景：
+js的执行是单线程的，而js代码是存在同步和异步的，这就需要一个机制来处理js的执行顺序，也就是event loop，事件循环
+
+2.宏任务和微任务
+js中任务分为宏任务和微任务，都是队列，先进先出，同步的任务都在宏任务队列执行
+
+1）宏任务包括：script(整体代码)，setTimeout，setInterval，I/O，UI交互事件，postMessage，MessageChannel，setImmediate(Node.js 环境)
+2）微任务包括：Promise.then()，MutationObserver，process.nextTick(Node.js环境)
+
+3.event loop步骤
+1）从宏任务队列头部取出一个任务执行
+2）执行过程中，遇到微任务则将其添加到微任务队列中
+3）当前宏任务执行完毕后，检测微任务队列是否存在任务，存在则挨个执行直至完毕
+4）GUI渲染
+5）重新从宏任务头部开始，直至宏任务队列执行完毕
+
+4.async-await
+async-await其实只是Promise+generator的语法糖，使用await调用的方法，就和Promise执行一样，其后的代码，就相当于Promise.then()中执行的一样
+也就是说await前的代码正常执行，await后的代码，是当前执行的微任务队列中执行
+
+5.requestAnimationFrame：既不属于宏任务也不属于微任务的异步方法
+window.requestAnimationFrame()，传入一个回调函数作为参数，该回调会在浏览器下次重绘之前执行，更新动画，这个操作在GUI渲染之前执行，且在微任务之后，但是执行并不是在当前帧，而是浏览器根据当前策略自行决定在哪一帧执行，所以都是不确定的

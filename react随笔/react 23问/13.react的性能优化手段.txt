@@ -1,0 +1,17 @@
+1.减少render次数
+1）类组件中优化：
+1>使用纯组件PureComponent作为继承的基类
+2>使用React.memo高阶组件包装组件
+3>使用shouldComponentUpdate生命周期函数自定义渲染逻辑
+2）函数组件中优化：
+1>使用useMomo
+2>使用useCallback
+
+2.组件懒加载（严格来说，这不是性能优化，算是体验优化）
+使用Suspense 和 lazy进行懒加载
+使用React.lazy(() => import(XXX)) 的形式定义需要懒加载的组件，并用<Suspense></Suspense>对子组件进行包裹，这样只有子组件完全加载完才会载入父组件，过程中会展示Suspense上的fallback属性，一般是loading效果
+多个Suspense各自独立，互相不干扰，也算是页面渲染性能的优化吧
+
+3.其他方式（平时写时注意，不算为了优化而特意做的改进）
+1）针对频繁变动的列表，使用id作为唯一key，而不是用数组下标
+2）必要时通过样式控制组件显隐，这样能保证不会频繁修改Dom

@@ -1,0 +1,1 @@
+通过redux和react content配合使用，并且借助于高阶函数，实现了react-redux

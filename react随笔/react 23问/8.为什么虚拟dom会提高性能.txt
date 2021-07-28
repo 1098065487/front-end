@@ -1,0 +1,13 @@
+虚拟dom相当于在js和真实dom中间加了一个缓存，利用diff算法，避免了没有必要的dom操作，从而提高性能
+
+
+这里说一下，这里的diff算法不是传统的diff算法（时间复杂度太高），而是改进的diff算法
+
+对虚拟DOM和Dom-Diff的理解：
+https://segmentfault.com/a/1190000022277663
+
+虚拟Dom：virtual dom，
+原理是通过js的object对象模拟dom中的节点，然后再通过特定的render方法，将其渲染成真实的Dom节点
+
+Dom Diff：
+通过js层面的计算，返回一个patch对象（补丁对象）, 再通过特定的操作解析patch对象，完成对页面的重新渲染

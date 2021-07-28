@@ -1,0 +1,31 @@
+无状态组件即是纯函数组件，输出数据全由props决定，没有副作用
+
+无状态组件内部不使用state，完全由props控制，在结合ts使用时，要指定props的类型，一般用接口定义好props类型使用：
+import * as React from 'react'
+interface IProps {
+ logo?: string
+ className?: string
+ alt?: string
+}
+export const Logo = (props: IProps) => {
+ const { logo, className, alt } = props
+ return (
+ <img src={logo} className={className} alt={alt} />
+ )
+}
+
+但是在props内部存在children的情况下，又得定义children的结构，就显得不太适用了，react提供  React.SFC<>  的type，描述无状态组件的函数形状，将props类型注入React.SFC<>，就可以正确使用
+
+正确使用：
+import * as React from 'react'
+interface IProps {
+ logo?: string
+ className?: string
+ alt?: string
+}
+export const Logo: React.SFC<IProps> = props => {
+ const { logo, className, alt } = props
+ return (
+ <img src={logo} className={className} alt={alt} />
+ )
+}

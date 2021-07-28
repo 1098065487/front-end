@@ -1,0 +1,9 @@
+es8提出的js新特性，async/await语法糖，让基于promise的异步行为的处理更加简洁
+
+async函数可能包含0个或多个await表达式，await表达式会暂停整个async函数的执行进程，并出让其控制权，只有当等待的基于promise的异步操作被兑现或被拒绝后才会恢复进程
+
+await表达式的返回值是后面异步promise的解决值（处理promise的resolve方法返回），这样的值已经可以被解构使用，很then()或catch()不同，不是promise对象
+
+对比promise的处理，其实async/await可以理解为：async声明是一个异步函数，由await后面的异步操作发出，被解决返回，后续处理通过处理await的返回值，不需要使用then()，catch()，并且await返回的不再是一个promise，状态确定，可以用try catch处理，符合常规同步操作规范
+
+async函数是有返回值的，而且返回值是一个promise，但是很多代码在返回时，都不去管返回值是否是一个promise，因为在返回时，默认会被隐式的传递给Promise.resolve包裹处理

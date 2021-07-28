@@ -1,0 +1,16 @@
+针对图片，考虑到是内联元素，可以设置水平和垂直居中
+
+1.table-cell + text-align: center; + vertical-align: center;
+dispaly: table-cell;
+text-align: center;
+vertical-align: middle;
+
+2.对父元素设置伪元素after/before
+text-align: center;（父）
+::before { （对父元素添加，或者是::after）
+  display: inline-block;
+  content: '';
+  height: 100%;
+  vertical-align: middle;
+}
+img { vertical-align: center; } （子）

@@ -1,0 +1,29 @@
+1.一个Promise必然处于以下三种状态之一：
+1.1待定（pending）：初始状态，没有被兑现，也没有被拒绝
+1.2已兑现（fulfilled）：意味着操作成功完成
+1.3已拒绝（rejected）：意味着操作失败
+promise的状态，只会从pending状态向fulfilled或rejected状态转变，then()方法能获取fulfilled状态并处理，catch()方法能获取rejected状态并处理，并且then()和catch()方法返回的都仍是一个promise，所以可以通过then()和catch()对promise对象进行链式调用
+
+注意：通常，处于fulfilled或rejected状态的，也可以说它处于已敲定（settled）状态，术语已决议（resolved），表示promise处于settled状态
+
+2.promise链式调用
+可以使用then()，catch()，finally()方法，将进一步操作和一个已敲定的promise关联起来，并且这些方法会返回一个新生成的promise，新生成的promise非强制性链式调用，从而形成整体链式调用
+
+then()和catch()里面处理确定状态的promise并返回一个新的promise，一般里面是两种函数handleFulfilled()和handleRejected()，将会决定返回的promise的状态是resolved还是rejected，仅在函数中throw错误出去，才会使promise成为rejected状态。、
+
+3.Promise对象提供了Promise()构造方法，可以将结果包装成Promise对象
+
+4.Promise附带的静态方法
+4.1Promise.all()  处理多promise对象状态集合，返回一个新promise，仅当全部参数promise成功	         	         时触发成功，一旦一个失败，触发失败，成功返回所有参数promise返回值数组，	         	         失败返回第一个失败promise的失败原因。
+4.2Promise.allSettled()  所有参数promise settled状态后，返回每个promise结果的数组
+4.3Promise.any()  当参数promise中一个成功，即返回这个成功的promise结果
+4.4Promise.race()  当参数promise中一个settled状态后，立即返回该结果，调用父promise的句柄
+4.5Promise.reject(reason)  返回一个状态为失败的promise，并将reason传递给处理方法
+4.6Promise.resolve(value)  返回一个状态由value决定的promise，一般用来返回一个promise对
+		        象，使value以promise对象的形式使用
+
+5.创建Promise
+想让某个函数拥有Promise功能，只需让其返回一个Promise即可，可以通过new Promise()创建
+
+new Promise()接收一个处理函数做参数，处理函数接受两个参数，resolve和reject，成功完成调用resolve，任务失败调用reject
+代码：const myPromise = new Promise((resolve, reject) => {...})

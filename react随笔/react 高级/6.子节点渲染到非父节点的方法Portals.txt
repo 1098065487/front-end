@@ -1,0 +1,12 @@
+我是这么理解的，对于react更新操作，实际都是虚拟dom合并到dom树，他提供将子节点渲染到父组件外的dom节点上，实际会比直接dom操作还要更方便一点，只需要暴露方法即可
+
+实际使用：
+ReactDOM.createPortal(child, container)
+其中child为待渲染子节点，container为待接收子节点的节点
+
+场景：
+一般情况下react组件返回的元素会被挂载到dom节点最近的父元素上，但是使用ReactDOM.createPortal()可以将其插入不同位置，典型需求就是对话框，悬浮卡，提示框的要求，当父组件有over-flow: hidden或者z-index样式时，子组件需要在视觉上跳出容器
+
+
+通过Portal进行事件冒泡：
+可以这样理解，尽管portal可以放置在dom树的任意位置，但是他也仍处于react树，位置与dom树无关，所以他仍拥有普通react子节点的功能特性，也就是说，在react树上的功能结构是不变的，可以由portal内部触发的事件，一直冒泡到react树的祖先，哪怕在dom树上，他们没有关系

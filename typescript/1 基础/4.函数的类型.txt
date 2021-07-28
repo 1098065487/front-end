@@ -1,0 +1,40 @@
+函数也是一种特殊的对象，函数定义有两种：函数声明  和  函数表达式。
+
+1.函数声明：
+直接对输入输出进行类型约束即可
+function sum(x: number, y: number): number {
+    return x + y;
+}
+
+2.函数表达式：
+2-1.函数表达式不仅要对等号右边的匿名函数做类型定义，还要对左边的函数变量进行类型定义
+let sum: (x: number, y: number) => number = function(x: number, y: number): number {
+    return x + y;
+}
+注意区分下ts的=>和ES6的=>，一个是表示函数定义，一个是箭头函数
+上面可以用箭头函数改写：
+let sum: (x: number, y: number) => number = (x: number, y: number) => {
+    return x + y;
+}
+
+2-2.更好的函数表达式类型约束，是使用接口定义函数形状：
+interface MathFunc {
+    (x: number, y: number): number
+}
+let sum: MathFunc = (x: number, y: number) => { return x + y }
+
+3.注意点：
+3-1.函数类型约束，参数可以定义为可选，但是可选参数必须放在参数序列最后，可以理解为保证约束参数正确传入
+3-2.ES6允许参数加上默认值，TS将有默认值的参数识别为可选参数，且不必放在参数最后。
+
+4.涉及到需要函数重载（比如说不同类型入参，导致不同类型结果）
+使用联合类型可能会有歧义，配合使用函数重载，就很明确了
+function reverse(x: number): number;
+function reverse(x: string): string;
+function reverse(x: number | string): number | string {
+    if(typeof x === 'number') {
+        return Number(x.toString().split('').reverse().join(''));
+    } else if(typeof x === 'string') {
+        return x.split('').reverse().join('');
+    }
+}

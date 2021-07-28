@@ -1,0 +1,16 @@
+1.首先，在setState时，React会为当前节点创建一个updateQueue的更新列队
+
+2.然后会触发reconciliation过程，在这个过程中，会使用名为Fiber的调度算法，开始生成新的Fiber树，Fiber算法可以做到异步可中断可更新
+
+3.然后React Scheduler会根据优先级高低，先执行优先级高的节点，具体是执行doWork方法
+
+4.在doWork方法中，React会执行一遍updateQueue中的方法，以获得新的节点，然后对比新旧节点，为老节点打上更新、插入、替换等Tag
+
+5.当前节点doWork完成后，会执行performUnitOfWork方法获得新节点，然后重复上面的过程
+
+6.当所有节点都doWork完成后，会触发commitRoot方法，React进入commit阶段
+
+7.在commit阶段中，React会根据各个节点的Tag，一次性更新整个dom
+
+
+老实说，这个过程具体的，没有看懂，但大致是描述从setState到页面渲染的过程，调用的算法，包括调度算法Fiber和重新渲染的算法改进的diff算法

@@ -1,0 +1,24 @@
+对象的内部原型（__proto__）和构造器原型（prototype）的关系：
+
+1.所有构造器（构造函数）的__proto__都指向Function.prototype，它是一个空函数。
+ （包括自定义构造函数和js内置构造器（Object, Function等））
+  1.1  Function.prototype的__proto__，指向Object.prototype
+  1.2  Object.prototype的__proto__，指向null
+这样才能形成原型链的链路。
+
+注意不要弄混：(针对原型链看__proto__)    当 let person1 = new Person() 时
+1-1. 从person1实例开始的原型链：
+person1.__proto__    >>   Person.prototype,
+Person.prototype.__proto__    >>    Object.prototype,
+Object.prototype.__proto__     >>    null
+
+1-2. 从Person构造函数开始的原型链：
+Person.__proto__    >>    Function.prototype,
+Function.prototype.__proto    >>    Object.prototype,
+Object.prototype.__proto__    >>    null
+在原型链中，只在开头直接用__proto__，向上逐层查找时，都是找prototype.__proto__，这样形成原型链。
+
+2.所有对象的__proto__都指向其构造器的prototype。
+这也是原型链的形成基础条件。
+
+一直看到有一种理解，对象存在constructor属性，指向构造函数，但其实应该是：constructor属性存在对象的__proto__属性上，指向的应该是当前构造函数prototype上的constructor，这一点当手动去覆盖构造函数的prototype时，由于constructor是默认加上的，覆盖会丢失，会导致查找时找到的是上一层的constructor，从而导致和期望不一致的结果。

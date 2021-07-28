@@ -1,0 +1,38 @@
+1.前端常用的存储方法：
+cookie，sessionStorage，localStorage，少量业务场景用到indexedDB
+
+2.三种存储方式区别：
+1）存储时效：cookie可以手动设置失效期，默认会话级
+                     sessionStorage存储时效为会话级
+                     localStorage存储时效为永久，可以手动清除
+2）访问限制：cookie可以设置路径path，比另外两种多了一层访问限制
+                     localStorage和sessionStorage访问限制是文档源级别，即协议、主机名和端口
+                     仅cookie可以通过设置domain属性值，使不同二级域名下共享cookie
+3）存储大小：cookie适合存储少量数据，按个数进行大小限制，不同浏览器限制数量不同
+                     Storage存储数据量较大
+4）操作方法：cookie作为document属性存在，原生js没有标准方法直接操作cookie，要通过属性                       处理操作cookie，项目中一般引入js-cookie插件，用插件方法操作
+                     Storage提供setItem()，getItem()，removeItem()方法操作
+5）其他：cookie在发送http请求时，会将本地的cookie作为头部信息传递给服务器
+               cookie可以由服务器通过http来设定
+
+3.cookie的组成部分：
+1）Expires：cookie最长有效期
+2）Max-Age：cookie最长有效期，与expires谁大谁为准
+3）Domain：指定cookie送达的主机名
+4）Path：指定url路径，此路径在请求路径中，才可以发送cookie头部
+5）Secure：一个带有安全属性的cookie，仅在SSL和HTTPS下，才发送服务器
+6）HttpOnly：设置该属性，不能由document属性，XMLHTTPRequest和Request访问cookie
+
+4.原生js操作cookie：
+原生js设置cookie只能通过操作document.cookie属性来做，一般赋值字符串，格式为：name=value; expires=expiration_time; path=domain_path; domain=domain_name; secure，注意中间不能出现其他符号和空格，一次只能设置一个cookie值，可多次设置
+
+5.Hybrid环境下（混合应用），使用前端存储注意：
+混合应用中，主要是注意会话级存储：sessionStorage
+混合应用中，webview从一个页面跳转到另一个页面时，会话并没有像浏览器中那样是继承延续的，这就导致两个页面的sessionStorage是不互相通用的，这个问题可以使用cookie来代替sessionStorage解决
+
+6.Storage存储的数据类型：
+Storage只能存储字符串型数据，所以在设置存储时，应先使用JSON.stringfy()先安全转换成字符串，在取值使用时，再使用JSON.parse()转换成json格式取值
+
+7.session级存储中，cookie和sessionStorage的区别：
+1）sessionStorage的会话基于标签，关闭标签则会话终止，而cookie基于浏览器进程
+2）sessionStorage的访问基于会话的继承和延续，即只有在当前标签下和当前标签打开的标签下才可以访问sessionStorage，而cookie是可以跨标签访问，只要还是当前浏览器即可

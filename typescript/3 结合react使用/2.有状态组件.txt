@@ -1,0 +1,23 @@
+有状态组件一般指类组件
+
+其实不管是无状态组件还是有状态组件，react都针对ts做了对应的解决方案：
+1）无状态组件使用了React.SFC<IProps>类型约束无状态组件函数
+2）有状态组件类继承Component<Iprops, IState>约束props和state类型
+
+有状态组件同时有props和state，react针对类组件，提供React.Component<>和React.PureComponent<>对props和state进行类型约束，里面还针对props和state只读做了readonly限定。
+
+import * as React from 'react'
+interface Props {
+ handleSubmit: (value: string) => void
+}
+interface State {
+ itemText: string
+}
+export class TodoInput extends React.Component<Props, State> {
+ constructor(props: Props) {
+ super(props)
+ this.state = {
+ itemText: ''
+ }
+ }
+}

@@ -1,0 +1,40 @@
+1.首先注意一点，尽管AJAX名称一直延续下来，还是异步Javascript和XML的因为缩写，但是其内涵早已拓展开了，包含XML、JSON等多格式的发送接收数据。
+
+2.Ajax的原理主要是使用XMLHttpRequest对象与服务器进行通信，尽管其他网络请求的工具方法有不少，但基本都是参照这个原理来实现网络请求的
+
+3.网络请求步骤解析：
+
+1）借助XMLHttpRequest对象向服务器发送一个http请求
+    if(window.XMLHttpRequest) {
+        httpRequest = new XMLHttpRequest();
+    } else if(window.ActiveXObject) {
+        httpRequest = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+上面的代码只是解释老版本IE对网络请求的实现，实际目前浏览器全部支持XMLHttpRequest
+
+2）配置请求的处理响应onreadystatechange
+    httpRequest.onreadystatechange = handleResult;
+其实在这里只是配置处理响应的函数，具体的函数调用，会在请求发出后，获取到返回结果，才会根据配置去调用
+
+    具体处理：
+    1》检查请求状态readyState，只有返回值为4（XMLHttpRequest.Done）才代表有正确结果
+    2》检查响应码status，后续就是处理响应结果的步骤了（根据影响码 和 响应结果去做处理）
+function handleResult() {
+    if(httpRequest.readystate === XMLHttpRequest.DONE) {
+        if(httpRequest.status === 200) {
+            // 处理正确结果
+        } else {
+            // 处理错误信息
+        }
+    }
+}
+
+3）实际发送出请求open()和send()
+open() 发送请求方法，url，是否异步(可选，默认true且不建议修改)
+send() 发送除GET方法(已经用？连接在url上了)外，发送给服务器的参数
+
+    注意一点：
+当非GET方法时，使用send()传参，需要在send()前面配置好参数格式，如：
+httpRequest.open('POST', 'http://www.example.org/some.file', true);
+httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+httpRequest.send("name=value&so=on");

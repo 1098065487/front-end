@@ -1,0 +1,14 @@
+1.Suspense让组件等待某个异步操作，直到该操作结束即可渲染
+这种情况下，其实只要是Suspense组件包裹着的代码中，存在异步即有这种效果
+
+2.Suspense 和 lazy组合，实现组件懒加载
+这种情况下，一般是由React.lazy()导入组件，由Suspense组件包裹该组件，效果是仅当导入的组件完全加载完，才在页面显示，在加载过程中，一直显示Suspense组件上的fallback内容
+
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+function MyComponent() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtherComponent />
+    </Suspense>
+  );
+}

@@ -1,0 +1,36 @@
+1.constructor方法：构造方法
+1）类在实例化对象时（new），自动调用构造方法，若没有显式定义，会自动创建一个空的构造方     法
+2）constructor方法默认返回实例对象（this），当显式return另一个对象，会导致实例不在是类的
+3）es5构造函数本质还是函数，可以直接调用，但是es6类，必须new调用
+
+2.类的实例
+1）和es5一样实例属性除非显示定义在自身（this对象），否则都是定义在原型上
+其实这和js类和继承的思想一致，属性放在构造上继承，根据实例不同而不同，方法放在原型上，不同实例共用
+
+3.存取器（getter、setter函数）：
+注意，get和set函数都是固定格式的，不是自定义的getXX()和setXX()，只要固定格式为get xx() {...} 和 set xx(aa) {...}，就能自动是被为存取器，就能直接通过方法名xx调用（总感觉怪怪的，但是文档是这么写的。。。）
+class MyClass {
+    constructor() {}
+    get prop() { return 'getter' };
+    set prop(value) { console.log(value) };
+}
+let inst = new MyClass();
+inst.prop = 123;    // 123
+inst.prop    // getter
+
+4.class表达式：和函数表达式一样，可以用表达式的形式来定义类
+1）在等号两边出现两个类名，左边的在外部环境可用，右边的就只能在类定义内部使用
+const MyClass = class Me {
+    getClassName() { return Me.name; }
+}
+2）和匿名函数一样，可以写成类似的匿名类
+const MyClass = class { ... }
+3）和立即执行函数一样，也可以写立即执行类（实例化）
+let person = new class { ... }('tom');
+
+5.注意点：
+1）类不存在变量提升，es5类是构造函数实现的，函数有状态提升的效果
+2）name属性，类存在name属性，值为class后面的类名
+3）Generator方法：类中，某个方法前加星号（*）,表示该方法是一个Generator函数。
+     Generator函数是es6新特性，还待整理
+4）this指向问题，类中this默认指向实例，有存在指向方法运行时环境的可能。

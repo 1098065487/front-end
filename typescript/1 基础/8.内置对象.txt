@@ -1,0 +1,9 @@
+在js里都是直接使用内置对象，在ts中，使用内置对象，需要添加类型约束
+
+1.标准内置对象：
+Boolean, String, Date, Error等
+let e: Error = new Error('Error');
+
+2.DOM和BOM内置对象：
+Document, HtmlElement, Event, NodeList等
+let body: HtmlElement = document.querySelectorAll('div');

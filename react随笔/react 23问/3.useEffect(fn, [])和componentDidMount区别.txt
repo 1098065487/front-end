@@ -1,0 +1,18 @@
+首先给出结论：useEffect(fn, [])不是新的componentDidMount()
+虽然在重构class组件时，useEffect(fn, [])可以用在和componentDidMount()一样的场景下，去对挂载后的组件再进行一些设置
+理解一个概念：
+类组件依赖的是生命周期，函数组件依赖的是数据同步
+类组件会考虑页面渲染的过程，并优化，函数组件只是最简单的页面数据同步渲染
+
+1. 发生时机和渲染效果不同：
+1）componentDidMount()发生在组件挂载后，在已有render一次的基础上，componentDidMount会触发改变，并触发re-render，但是这里处理做过优化，浏览器会仅显示第二次render()的结果，避免了闪烁效果
+2）函数组件没有生命周期一说，会按顺序执行，useEffect(fn, [])会在函数组件挂载到dom渲染过一次后执行，做出改变后，更新UI重新渲染一次(异步的多个改变会导致多次渲染，所以建议异步多请求在改变值时，判断都完成才统一setState，这样仅渲染一次)，会有闪烁效果。
+
+2.捕获props和state的状态不同
+1）componentDidMount()中，使用的state，永远是state的当前值，因为this.state的指向永远是最新的（react的优化），让整个class组件中的state值都是最新的值
+2）函数组件就不同了，所有的函数调用都有其作用域，形成一个函数闭包，在某个函数调用的节点获取到的state值只是当前事件节点的state值，即使后续又有state值的变更，与之前的调用无关，而useEffect(fn, [])是在组件挂载后立即调用，所获取的state永远是第一次进来的state初始值
+（包括props）
+
+3.功能不同：可以理解为useEffect功能更多
+1）useEffect(fn, [])在功能上，可以看作componentDidmount, componentDidUpdate, componentWillUnmount三个生命周期的集合，fn中可以写componentDidMount的内容，依赖[]中可以写componentDidUpdate类似的，关于状态变化的监听，而且更加简单，fn的return中，可以写componentWillUnmount的内容
+2）componentDidMount对比下，功能只有一部分

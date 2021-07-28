@@ -1,0 +1,9 @@
+1.useReducer可以理解成useState的一种更高阶的实现，形如：(state, action) => newState
+
+  1）简单的，在函数中直接返回newState，形如：
+    const [state, dispatch] = useReducer(reducer, initialState);
+通过dispatch触发reduce，在reducer函数里面处理state，返回initialState.
+
+  2) 复杂的，初始state通过init函数设置，并在reducer函数内调用init函数处理state，实现逻辑分离，形如：
+    const [state, dispatch] = useReducer(reducer, initialState, init);
+通过dispatch触发reduce，在reducer函数内调用init函数处理state，返回state最新状态值。

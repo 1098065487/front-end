@@ -1,0 +1,25 @@
+cookie：服务器发送到用户浏览器并保存在本地的一小块数据，可以在下次向同一服务器发请求时             被请求携带发送
+作用：告知服务器两个请求来自同一浏览器，使无状态的http请求记录稳定的状态信息成为可能
+一般应用：会话状态管理（登录状态，购物车，游戏分数等）
+                个性化设置（自定义设置，主题）
+                浏览器行为跟踪（跟踪分析用户行为）
+
+1.创建cookie（注意这里是服务器）
+服务器收到http请求时，可以在响应头里面添加一个Set-Cookie选项，浏览器收到响应后，通常会保存下cookie，之后每次对该服务器的请求都通过Cookie请求头部将cookie信息发送给服务器。
+服务器响应头部：Set-Cookie: <cookie名>=<cookie值>  x  n （多个使用多次）
+浏览器请求头部：Cookie: <cookie名>=<cookie值>;  x  n  (多个用 ; 分隔)
+
+2.cookie的生命周期
+2.1会话期cookie，浏览器关闭后自动删除，不需要指定过期时间Expires或有效期Max-Age
+     可能要注意，有的浏览器提供了会话恢复，会导致cookie会被一直保存
+2.2持久性cookie的生命周期取决于过期时间或有效期
+set cookie时设置过期时间：Set-Cookie: id=2222; Expires=231600;
+
+3.cookie的作用域
+3.1Domain属性：指定了哪些主机可以接受cookie，默认origin，即不包含子域名
+3.2Path属性：指定了主机下哪些路径可以接受cookie，包括配置下的子路径
+3.3SameSite属性：指定是否允许浏览器跨站请求时发送某个cookie
+    Set-Cookie: key=value; SameSite=Strict;
+None：浏览器跨站请求或同站请求继续发送cookies
+Strict：浏览器仅同站请求发送cookie
+Lax：与Strict类似，但是用户从外部站点导航至url的除外（如图片加载或frames调用）

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+
+<section class="punk-web">
+    <div class="home-content">
+
+        <div class="home-fashion">
+            <div class="home-fashion-layout">
+                <div class="home-fashion-title">FASHION SHOW</div>
+                <p>We have been working hard to spread the Gothic culture.</p>
+                <div class="home-fashion-content">
+                    <div class="lazy-background home-fashion-part" data-value="1"></div>
+                    <div class="lazy-background home-fashion-part" data-value="2"></div>
+                    <div class="lazy-background home-fashion-part" data-value="3"></div>
+                    <div class="lazy-background home-fashion-part" data-value="4"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pop-box"></div>
+        <div id="pop-box-container" class="pop-box-container">
+            <div class="pop-box-close">&#215;</div>
+            <div class="pop-box-content"></div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+.home-content {
+  width: 100%;
+  background-color: #000;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.home-fashion {
+  width: 100%;
+  margin-top: 3rem;
+}
+.home-fashion .home-fashion-layout {
+  width: 60rem;
+  margin: 0 auto;
+}
+.home-fashion .home-fashion-layout .home-fashion-title {
+  width: 24.65rem;
+  margin: 0 auto;
+  height: 5.8rem;
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/title-bg.png") center no-repeat;
+  background-size: cover;
+  font-family: doublefeature;
+  font-size: 1.8rem;
+  color: #ffffff;
+  text-align: center;
+  padding-top: 2rem;
+}
+.home-fashion .home-fashion-layout p {
+  margin: 1rem 0;
+  font-family: AppleGothic;
+  font-size: 0.7rem;
+  color: #ffffff;
+  text-align: center;
+}
+.home-fashion .home-fashion-layout .home-fashion-content {
+  width: 100%;
+  margin-top: 5rem;
+  display: flex;
+  flex-flow: row nowrap;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part {
+  width: 12.75rem;
+  height: 19.1rem;
+  margin-right: 3rem;
+  background: url("https://s3.punkravestore.com/shopify/theme/images/lazy-bg.jpg") center no-repeat;
+  background-size: cover;
+  transition: 0.5s ease-in;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:hover {
+  cursor: pointer;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:last-of-type {
+  margin-right: 0;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(1).visible {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-1-1.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(1):hover {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-1-2.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(2).visible {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-2-1.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(2):hover {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-2-2.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(3).visible {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-3-1.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(3):hover {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-3-2.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(4).visible {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-4-1.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-fashion .home-fashion-layout .home-fashion-content .home-fashion-part:nth-of-type(4):hover {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-4-2.jpg") center no-repeat;
+  background-size: cover;
+}
+.pop-box {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  z-index: 1001;
+  opacity: 0.5;
+}
+.pop-box:hover {
+  cursor: pointer;
+}
+.pop-box-container {
+  display: none;
+  position: fixed;
+  top: calc(50% - 22.5rem);
+  left: calc(50% - 30rem);
+  width: 60rem;
+  height: 45rem;
+  z-index: 1002;
+  background: url("https://s3.punkravestore.com/shopify/theme/images/lazy-bg.jpg") center no-repeat;
+  background-size: cover;
+}
+.pop-box-container.visible-1 {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-1-big.jpg") center no-repeat;
+  background-size: cover;
+}
+.pop-box-container.visible-2 {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-2-big.jpg?") center no-repeat;
+  background-size: cover;
+}
+.pop-box-container.visible-3 {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-3-big.jpg") center no-repeat;
+  background-size: cover;
+}
+.pop-box-container.visible-4 {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/fashion-4-big.jpg") center no-repeat;
+  background-size: cover;
+}
+.pop-box-container .pop-box-close {
+  width: 4rem;
+  height: 4rem;
+  margin-left: 56rem;
+  font-size: 3rem;
+  text-align: center;
+  line-height: 4rem;
+  color: #ffffff;
+}
+.pop-box-container .pop-box-close:hover {
+  cursor: pointer;
+  color: #010101;
+  background-color: #e1e1e1;
+}
+</style>
+
+</body>
+
+<script>
+    $('.home-fashion-part').on("click", function(e) {
+        // 出现遮罩
+        $(".pop-box").show();
+        $("#pop-box-container").show();
+        document.documentElement.style.overflow = "hidden";
+        // 判断展示
+        let value = $(e.target).attr("data-value");
+        $("#pop-box-container").addClass(`visible-${value}`);
+    });
+
+    function closePopBox() {
+        $(".pop-box").hide();
+        $("#pop-box-container").hide();
+        document.documentElement.style.overflow = "visible";
+        $("#pop-box-container").removeClass();
+        $("#pop-box-container").addClass("pop-box-container");
+    }
+
+    // 关闭遮罩
+    $('.pop-box').on("click", function(e) {
+        closePopBox();
+    });
+    $('.pop-box-close').on("click", function(e) {
+        closePopBox();
+    });
+</script>
+
+<script>
+    var fun = function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                if (clientWidth > 575.98) {
+                    docEl.style.fontSize = 20 * (clientWidth / 1920) + 'px';
+                } else {
+                    docEl.style.fontSize = 20 * (clientWidth / 375) + 'px';
+                }
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    };
+
+    fun(document, window);
+</script>
+
+<script>
+    // 使用现代浏览器属性，不兼容IE，但是对web和mobile写一块的写法最友好
+    document.addEventListener("DOMContentLoaded", function() {
+        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+        let lazyBackgrounds = [].slice.call(document.querySelectorAll(".lazy-background"));
+
+        if ("IntersectionObserver" in window) {
+            // img图片懒加载
+            let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        let lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.srcset = lazyImage.dataset.srcset;
+                        lazyImage.classList.remove("lazy");
+                        lazyImageObserver.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            lazyImages.forEach(function(lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+
+            // 背景图懒加载
+            let lazyBackgroundObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        lazyBackgroundObserver.unobserve(entry.target);
+                    }
+                });
+            });
+
+            lazyBackgrounds.forEach(function(lazyBackground) {
+                lazyBackgroundObserver.observe(lazyBackground);
+            });
+        }
+    });
+</script>
+
+</html>

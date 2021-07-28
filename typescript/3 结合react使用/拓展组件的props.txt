@@ -1,0 +1,25 @@
+拓展  类型约束  ，一般有两种情况，在项目中或文章中见过：
+
+1）使用 & 连接，拓展interface或者type声明的类型，一般是添加额外的属性约束，连接一个属性对象{ }。
+type ButtonProps = {
+    color: string;
+    text: string;
+}
+type ContainerProps = ButtonProps & {
+    height: number;
+}
+const Container: React.FC<ContainerProps> = ({ color, height, width, text }) => {
+  return <div style={{ backgroundColor: color, height: `${height}px` }}>{text}</div>
+}
+
+2）对于interface声明的类型，还可以通过接口类型的特殊拓展，使用extends继承，重新声明一个接口继承已有的接口类型，在其中定义额外的属性：
+interface ButtonProps {
+    color: string;
+    text: string;
+}
+interface ContainerProps extends ButtonProps {
+    height: number;
+}
+const Container: React.FC<ContainerProps> = ({ color, height, width, text }) => {
+  return <div style={{ backgroundColor: color, height: `${height}px` }}>{text}</div>
+}

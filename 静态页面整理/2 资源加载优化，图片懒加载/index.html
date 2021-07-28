@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+</head>
+<body>
+
+<a href="" class="lazy-background home-banner"></a>
+
+<img class="lazy" src="https://s3.punkravestore.com/shopify/theme/images/lazy-bg.jpg" data-src="https://cdn.shopify.com/s/files/1/0262/8131/2365/files/Y-1213-5_512x512.jpg?v=1593333422" data-srcset="" alt="1593333422" />
+
+</body>
+
+<!-- <script>
+    // 使用现代浏览器属性，不兼容IE，但是对web和mobile写一块的写法最友好
+    document.addEventListener("DOMContentLoaded", function() {
+        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+        let lazyBackgrounds = [].slice.call(document.querySelectorAll(".lazy-background"));
+
+        if ("IntersectionObserver" in window) {
+            // img图片懒加载
+            let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        let lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.srcset = lazyImage.dataset.srcset;
+                        lazyImage.classList.remove("lazy");
+                        lazyImageObserver.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            lazyImages.forEach(function(lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+
+            // 背景图懒加载
+            let lazyBackgroundObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        lazyBackgroundObserver.unobserve(entry.target);
+                    }
+                });
+            });
+
+            lazyBackgrounds.forEach(function(lazyBackground) {
+                lazyBackgroundObserver.observe(lazyBackground);
+            });
+        }
+    });
+</script> -->
+
+<script>
+	// 写法复杂些，兼容性更好
+    document.addEventListener("DOMContentLoaded", function() {
+        // img图片懒加载
+        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+        let activeImg = false;
+
+        const lazyLoadImg = function() {
+            if (activeImg === false) {
+                activeImg = true;
+
+                setTimeout(function() {
+                    lazyImages.forEach(function(lazyImage) {
+                        if ((lazyImage.getBoundingClientRect().top <= window.innerHeight && lazyImage.getBoundingClientRect().bottom >= 0) && getComputedStyle(lazyImage).display !== "none") {
+                            lazyImage.src = lazyImage.dataset.src;
+                            lazyImage.srcset = lazyImage.dataset.srcset;
+                            lazyImage.classList.remove("lazy");
+
+                            lazyImages = lazyImages.filter(function(image) {
+                                return image !== lazyImage;
+                            });
+
+                            if (lazyImages.length === 0) {
+                                document.removeEventListener("scroll", lazyLoadImg);
+                                window.removeEventListener("resize", lazyLoadImg);
+                                window.removeEventListener("orientationchange", lazyLoadImg);
+                            }
+                        }
+                    });
+
+                    activeImg = false;
+                }, 200);
+            }
+        };
+
+        lazyLoadImg();
+        document.addEventListener("scroll", lazyLoadImg);
+        window.addEventListener("resize", lazyLoadImg);
+        window.addEventListener("orientationchange", lazyLoadImg);
+
+        // 背景图片懒加载
+        let lazyBackgrounds = [].slice.call(document.querySelectorAll(".lazy-background"));
+        let activeBg = false;
+
+        const lazyLoadBg = function() {
+            if (activeBg === false) {
+                activeBg = true;
+
+                setTimeout(function() {
+                    lazyBackgrounds.forEach(function(lazyBackground) {
+                        if ((lazyBackground.getBoundingClientRect().top <= window.innerHeight && lazyBackground.getBoundingClientRect().bottom >= 0) && getComputedStyle(lazyBackground).display !== "none") {
+                            lazyBackground.classList.add("visible");
+                            lazyBackground.classList.remove("lazy-background");
+
+                            lazyBackgrounds = lazyBackgrounds.filter(function(background) {
+                                return background !== lazyBackground;
+                            });
+
+                            if (lazyBackgrounds.length === 0) {
+                                document.removeEventListener("scroll", lazyLoadBg);
+                                window.removeEventListener("resize", lazyLoadBg);
+                                window.removeEventListener("orientationchange", lazyLoadBg);
+                            }
+                        }
+                    });
+
+                    activeBg = false;
+                }, 200);
+            }
+        };
+
+        lazyLoadBg();
+        document.addEventListener("scroll", lazyLoadBg);
+        window.addEventListener("resize", lazyLoadBg);
+        window.addEventListener("orientationchange", lazyLoadBg);
+    });
+</script>
+
+<style>
+.home-banner {
+  display: block;
+  width: 100%;
+  height: 37.5rem;
+  background: url("https://s3.punkravestore.com/shopify/theme/images/lazy-bg.jpg") center no-repeat;
+  background-size: cover;
+}
+.home-banner.visible {
+  background: url("https://s3.punkravestore.com/shopify/theme/images/home/home-banner.jpg") center no-repeat;
+  background-size: cover;
+}
+img {
+  width: 25rem;
+  height: 25rem;
+}
+</style>
+
+<script>
+    var fun = function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                if (clientWidth > 575.98) {
+                    docEl.style.fontSize = 20 * (clientWidth / 1920) + 'px';
+                } else {
+                    docEl.style.fontSize = 20 * (clientWidth / 375) + 'px';
+                }
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    };
+
+    fun(document, window);
+</script>
+
+</html>

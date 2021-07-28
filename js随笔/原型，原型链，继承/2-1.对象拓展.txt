@@ -1,0 +1,14 @@
+1.对象分为普通对象和函数对象：
+    函数对象都是通过new Function()创建的，使用typeof 时，返回的是function，包括自定义函数和js内置的构造器（构造函数）Number,Boolean,String,Array,Object,Function等。
+    每个对象都有__proto__属性，但只有函数对象有prototype属性，所以只有函数对象可以实例化出实例，在console打印时，可以打印出普通对象，点开可见到__proto__属性，打印出的函数对象，会显示为native code，因为本质上它是一个函数（构造函数）。
+
+2.构造函数：
+（可以理解为内部使用了this的函数，对构造函数使用new运算符，能生成实例，且this变量绑定在实例对象上）
+var person1 = new Person();
+        实例的constructor（构造函数）属性，指向构造函数。
+        person1.constructor   ===   Person
+(但其实实例的constructor属性在实例__proto__属性中，__proto__指向构造的prototype，其中有一个默认的constructor属性，指向构造函数，这样理解才正确，尤其当手动覆盖构造函数的prototype属性时，会丢失默认的constructor，导致向上层查找，导致不符合上面的错误理解)。
+
+3.instanceof运算符：
+判断实例对象是否是原型对象的实例。
+cat1 instanceof Cat      // true

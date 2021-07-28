@@ -1,0 +1,12 @@
+Suspense使组件等待某些操作结束后，再进行渲染，应用于通过React.lazy动态加载组件
+
+动态加载组件的场景，一般出现在组件树中某些子组件尚未具备渲染条件时，展示loading而不是不显示任何组件表现出卡顿效果，使用
+比如子组件数据来源于父组件的处理，且处理时长可能较长时，为防止子组件等待渲染时间较长，可采用懒加载子组件（React.lazy），等待时展示React.Suspense的loading（fallback属性）
+
+使用：
+1.使用React.lazy定义一个动态加载的组件（可以减少打包bundle的体积）
+const SomeComponent = React.lazy(() => import('./SomeComponent'));
+2.使用React.Suspense包裹动态加载组件，并指定加载指示器（loading indicator）
+<React.Suspense fallback={<Spinner />}>
+  <SomeComponent />
+</React.Suspense>

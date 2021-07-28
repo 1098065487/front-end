@@ -1,0 +1,13 @@
+webpack根据mode配置，会使用不同模式下的内置优化
+
+用法：
+1）可以在配置中设置：
+module.exports = {
+    mode: 'production'
+}
+2）可以在cli参数中传递：
+webpack --mode=production
+
+可选值：
+1）development，会将process.env.NODE_ENV设置为development，启用相应优化
+2）production，会将process.env.NODE_ENV设置为production，启用相应优化

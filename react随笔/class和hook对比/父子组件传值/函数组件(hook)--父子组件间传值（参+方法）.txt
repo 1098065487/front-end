@@ -1,0 +1,66 @@
+1.父传子：
+      1）传参：对于函数组件，父传子值就相当于函数传参，子组件直接接参即可。
+      2）方法：函数组件，子组件接父组件方法也和传参一样，方法做参数即可。
+
+2.子传父：
+针对函数组件，父组件获取子组件的参数及方法，可以通过ref实现：
+    1.父组件使用useRef创建ref传入子组件
+const Fu = () => {
+  const fuRef = useRef();
+  
+  return <Zi ref={fuRef}>;
+}
+    2.子组件使用useImperativeHandle暴露ref自定义的实例值（包括属性和方法）给父组件，同时子组件需要被forwardRef包裹
+const Zi = props => {
+  const {fuRef} = props;
+  useImperativeHandle(fuRef, () => ({
+    ziFunc: () => (),
+    ziVal: ''
+  }))
+}
+//  实际在用的时候，存在子组件需要调connect，会有冲突，将ref改个命名，可以到props获取，即可省略这一步（在最下面给出查到的冲突的解决方法）
+export default forwardRef(Zi);
+    3.父组件调用
+  const fuFunc = () => fuRef.current.ziFunc();
+  const fuVal = fuRef.current.ziVal;
+直接使用即可
+
+针对父组件仅需要获取子组件参数的情况，也可以类似class组件，通过父组件传默认参数及获取变化方法，子组件获取后，做默认值，变动同时调方法传回父组件。
+
+类似的，当父组件状态值变动需要影响到子组件值的时候，也需要用hook来实现getDerivedStateFromProps，类似的思想，子组件缓存接到的值做比较值，和下一次接到的值做对比，不一致则更新比较值和更新状态值：
+function ScrollView({row}) {
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [prevRow, setPrevRow] = useState(null);
+
+// 初次进入即会触发
+  if (row !== prevRow) {
+    // Row 自上次渲染以来发生过改变。更新 isScrollingDown。
+    setIsScrollingDown(prevRow !== null && row > prevRow);
+    setPrevRow(row);
+  }
+
+  return `Scrolling down: ${isScrollingDown}`;
+}
+
+
+关于使用connect和forwardRef冲突问题，查到以下解决办法：
+
+class MyComponent extends React.Component {
+  render() {
+    return <SomeInnerComponent ref={this.props.myForwardedRef} />;
+  }
+}
+
+const ConnectedMyComponent = connect(
+  mapStateToProps
+)(MyComponent);
+
+export default forwardRef((props, ref) =>
+  <ConnectedMyComponent {...props} myForwardedRef={ref} />
+);
+
+
+注意：
+事实上，当子组件为表单受控组件时，父组件消费子组件的最终值，子组件自控值变化，或者复杂一点，初值由父组件提供并可能随之变化，变化由自身控制并返回最终值给父组件
+
+这种情况一般父组件会传value和onChange给子组件，子组件判断value的变化决定初值，并在任何变化时将最新值onChange回父组件，但是由于表单已经控制了value和onChange事件，这两个参数一般不会显式传递子组件，可使用可选参数的形式（TS环境下），在子组件接值时，value赋默认初值，使用onChange时判断下方法存在即可

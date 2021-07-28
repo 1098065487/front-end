@@ -1,0 +1,11 @@
+1.原型（prototype）和__proto__属性：
+    每个对象都有一个__proto__属性，指向它的构造函数的prototype（原型对象）属性。
+    每个构造函数都有一个prototype属性，并且prototype中的constructor指向构造函数本身。
+
+let a = {};    也就是   let a = new Object();
+        a.__proto__   ===   Object.prototype
+        Object.prototype.constructor   ===   Object
+
+2.原型链（prototype chain）：
+    由于每个对象的__proto__属性都指向其构造函数的prototype，prototype是原型对象，也是对象的一种，也有自己的__proto__属性，继续指向上层构造的prototype，直至到null，形成链路。
+    当试图访问一个对象的属性或者方法时，会在该对象，以及该对象的原型，乃至该对象原型的原型，依次逐层向上搜索，直至匹配或者到达原型链的末端（null），到达末端返回undefined。

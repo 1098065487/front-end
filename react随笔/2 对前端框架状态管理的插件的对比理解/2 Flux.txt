@@ -1,0 +1,21 @@
+理解flux，其实都可以将其视作一种思想，他提供了基本概念，所有框架都可以根据他的思想来做一些实现
+
+flux将应用分成4个部分：view  action  dispatcher  store
+
+4者关系和流程通路：
+view是视图，展示数据，store存储数据
+当store存储的数据发生变化，会通过技术手段（如订阅如监听），导致view发生变化
+view不仅展示数据，还可以触发操作，通常通过dispatch action
+dispatcher作为action分发处理中心，接收view dispatch的action，并转发到store
+store不仅存储数据，还存储着更新数据的actions
+store收到dispatcher转发过来的action，触发action更新数据，最终引起view变化
+
+注意：
+1）dispatcher接收的action不一定是view触发的，也可以是其他地方触发的，比如测试用例
+2）store的变化只能通过action触发，也就是说store方法中，setter都是私有的，公开的只有getter
+
+
+flux最大的特点是，数据是单向流动的
+**************************************
+
+

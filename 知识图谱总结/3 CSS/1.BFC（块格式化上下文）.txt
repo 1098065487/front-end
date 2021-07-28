@@ -1,0 +1,38 @@
+1.概念：
+BFC，Block Formatting Context，块格式化上下文
+是一个独立的布局环境，其中元素布局不收外界影响，且在这个环境下，所有块盒和行盒都垂直沿父元素边框排列
+
+2.产生
+1）根元素HTML会创建BFC环境
+2）浮动元素（float不是none）
+3）绝对定位元素（position为absolute或fixed）
+4）内联块（display: inline-block）
+5）表格单元格（display: table-cell，html中表格单元格默认属性）
+6）表格标题（display： table-caption，html中表格标题默认属性）
+7）块元素的overflow属性存在且不为visible
+8）display: flow-root
+9）column-span: all
+
+3.使用场景：
+1）外边距合并：
+外边距合并有两种情况：
+a.父元素内子元素div设置margin-top，会导致外边距合并，margin-top丢失，即父元素高度塌陷
+b.兄弟元素div设置margin-top和margin-bottom，相邻的外边距会合并，前一个的margin-bottom和后一个的margin-top合并
+解决：a可以通过给父元素添加BFC环境，或给该div添加外层嵌套div并在外层添加BFC环境，b可以通过给任意相干扰元素添加外层嵌套div并在外层添加BFC环境
+添加BFC环境可以参照产生，如添加overflow: hidden属性
+
+2）由于浮动或定位元素导致父元素高度丢失
+如父元素包含浮动子元素，若子元素都是浮动元素，会导致父元素高度丢失，如果父元素有边框，能清楚看到父元素高度消失了
+解决：给父元素添加BFC环境，通过BFC产生，触发BFC
+
+3）清除浮动
+产生原因还是2），当父元素包含的子元素全部浮动，会导致父元素高度丢失，此时父元素后面的元素，会占据父元素位置，并且排在子元素后面
+解决：有两种解决办法：
+a.通过清除浮动样式，此时不触发BFC
+b.通过给父元素添加BFC环境，触发BFC
+
+4）浮动导致后续兄弟元素占据浮动元素位置
+这种场景一般出现在兄弟元素间，与浮动元素相邻的元素，没有相对位置的样式，如margin，会默认补齐浮动元素位置
+解决：有两种解决办法：
+a.给非浮动元素添加BFC环境，触发BFC
+b.非浮动元素添加位置样式，如margin-left

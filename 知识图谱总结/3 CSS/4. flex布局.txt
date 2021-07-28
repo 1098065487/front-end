@@ -1,0 +1,20 @@
+1.使用：
+display: -webkit-flex;
+dispaly: flex;
+
+2.容器属性：
+1）flex-direction，水平方向子项目排列方向（row/column）
+2）flex-wrap，排列如何换行（nowrap/wrap）
+3）flex-flow，组合1）2）的写法
+4）justfy-content，水平方向对齐方式（center/space-between/space-around）
+5）align-items，垂直方向对齐方式（center）
+6）align-content，多轴时的对齐方式，如多行时垂直方向对齐方式（center/space-between/space-around）
+
+3.容器内项目属性：
+1）order，定义项目的排列顺序，越小越靠前，默认0
+2）flex-grow，定义项目放大比例，默认0，表示即使存在剩余空间，也不放大
+3）flex-shrink，定义了项目缩小比例，默认1，表示如果空间不足，项目缩小（0不缩小）
+4）flex-basis，定义在分配多余空间前，项目占据的主轴空间，可计算主轴是否有多余空间，默认auto，表示本来项目大小
+5）flex，组合flex-grow，flex-shrink，flex-basis，默认 0 1 auto ，有两个快捷值：auto表示 1 1 auto，none表示 0 0 auto
+6）align-self，项目自身独立的对齐方式，会覆盖align-items
+

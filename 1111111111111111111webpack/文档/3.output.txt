@@ -1,0 +1,25 @@
+output配置webpack在打包后写入编译文件，entry可以有多个，但output配置只能有一个，虽然配置只有一个，但是可以通过写法，产生多个编译文件（多入口情况，如filename: '[name].js'）
+
+配置output属性，起码：设置的是对象，对象内配置了输出文件名filename配置
+
+1.多个入口起点
+使用占位符确保每个文件有唯一的名称
+entry: {
+    app: './src/app.js',
+    search: './src/search.js'
+},
+output: {
+    filename: '[name].js',
+    path: __dirname + '/dist'
+}
+// 产生写入：./dist/app.js，./dist/search.js
+
+2.高级进阶
+对资源使用CDN和hash
+output: {
+    path: '/home/proj/cdn/assets/[fullhash]',
+    publicPath: 'https://cdn.example.com/assets/[fullhash]/'
+}
+编译时不知道最终输出文件的publicPath地址，可以留空，在运行时，通过入口起点文件中的属性__webpack_public_path__动态配置
+入口起点文件中：
+__webpack_public_path__ = myRuntimePublicPath;

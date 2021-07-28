@@ -1,0 +1,12 @@
+1.背景：
+在写静态页面时，使用事件监听页面根据size设置html的font-size，达到使用rem写全套页面的效果，当使用swiper时，由于swiper的js控制轮播区域width计算，会有一个延迟，导致轮播区域一直达不到想要的效果
+
+2.解决思路：
+在轮播js计算出大小后，重新触发一次resize事件，让计算出的结果，也符合rem计算的规范，只要能主动触发，再添加一个定时器延时即可
+
+3.代码：
+var myResize = function() {
+  var myEvent = new Event('resize');
+  window.dispatchEvent(myEvent);
+};
+setTimeout(myResize, 500);

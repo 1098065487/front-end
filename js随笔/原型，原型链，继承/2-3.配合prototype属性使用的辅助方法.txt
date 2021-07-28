@@ -1,0 +1,13 @@
+1. isPrototypeOf()
+判断某个原型对象（prototype）和实例之间的关系
+Cat.prototype.isPrototypeOf(cat1)     // true
+
+2.hasOwnProperty()
+实例对象用来判断摸个属性是否是自身属性，而不是继承自prototype对象的属性
+cat1.hasOwnProperty("type")     // false
+      原型链的查询比较耗时，访问不存在的属性也会遍历整个原型链，hasOwnProperty是js中唯一处理属性且不会遍历原型链的方法。
+
+3. in运算符
+判断某个属性是否在实例中，或者用来遍历实例对象的属性
+"type" in cat1     // true
+for(var attr in cat1) {...}

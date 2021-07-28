@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="./common.css">
+    <title></title>
+</head>
+<body>
+
+<section class="web">
+    
+</section>
+
+<section class="mobile">
+    
+</section>
+
+</body>
+
+<style>
+// 针对浏览器默认font-size: 12px，设置根元素font-size: 20px，并消除页面干扰
+nav, footer {
+  font-size: 12px;
+}
+
+// 添加首页配置模块，消除字体干扰
+.index-section {
+  font-size: 13px;
+  span {
+    line-height: normal;
+  }
+}
+footer {
+  margin-top: 0 !important;
+}
+
+.web {
+  @media(max-width: 575.98px) {
+    display: none;
+  }
+  @media(min-width: 575.98px) {
+    display: block;
+  }
+}
+
+.mobile {
+  @media(max-width: 575.98px) {
+    display: block;
+  }
+  @media(min-width: 575.98px) {
+    display: none;
+  }
+}
+</style>
+
+<script>
+    var fun = function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                if (clientWidth > 575.98) {
+                    docEl.style.fontSize = 20 * (clientWidth / 1920) + 'px';
+                } else {
+                    docEl.style.fontSize = 20 * (clientWidth / 375) + 'px';
+                }
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    };
+
+    fun(document, window);
+</script>
+
+</html>

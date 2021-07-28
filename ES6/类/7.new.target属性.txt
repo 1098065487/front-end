@@ -1,0 +1,1 @@
+es6新增了一个new.target属性，作用于构造函数之中，返回new命令作用于哪个构造函数，父类new对象时，在构造函数中new.target指向父类，子类new对象时，在父类构造中，new.target指向子类。不是new触发的构造，返回undefined。

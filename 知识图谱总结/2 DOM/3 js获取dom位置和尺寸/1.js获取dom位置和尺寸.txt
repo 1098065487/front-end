@@ -1,0 +1,23 @@
+1.基本概念：client-、scroll-、offset-
+1）clientWidth，clientHeight
+元素内尺寸，包括元素内容+内边距，不包括边框（IE包括）、外边距、滚动条
+2）clientLeft，clientTop
+分别返回内边距边缘和边框的外边缘之间的水平和垂直距离，也就是左、上边框宽度
+3）offsetWidth，offsetHeight
+元素外尺寸，包括元素内容+内边距+边框+滚动条，不包括外边框
+4）offsetLeft，offsetTop
+分别返回元素边框外边距与已定位的父容器（offsetParent对象）的左上角x，y距离，offsetparent对象指离元素最近的定位祖先元素（relative，absolute）
+5）scrollWidth，scrollHeight
+分别表示出现横向和纵向滚动条时，实际滚动区域的宽度和高度，无滚动条时，和client-相等
+6）scrollTop，scrollLeft
+分别表示出现纵向和横向滚动条时，滚动条滚动的距离，无滚动条时，都等于0
+
+这里有一个小技巧：scrollHeight === clientHeight + scrollTop，当clientHeight + scrollTop >= scrollHeight时，表示到达内容底部，可以以此为条件，触发加载
+
+2.两种坐标：文档坐标和视口坐标
+1）文档坐标参照对象为document对象，包括整个页面部分和滚动条，文档左上角作原点
+2）视口坐标参照对象时浏览器，但是只包括当前窗口显示页面的部分，不包括滚动条和其他浏览器外壳（菜单，工具栏，状态栏）
+两个坐标实际相差的，只是是否包括滚动条
+
+3.getBoundingClientRect()
+该方法返回一个对象，包括left、right、top、bottom，是视口坐标，width、height，是元素尺寸

@@ -1,0 +1,5 @@
+React Fiber是一种基于浏览器的单线程调度算法。
+
+详细说明：https://github.com/WangYuLue/react-in-deep/blob/main/02.React%20Fiber%20%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F.md
+
+为了解决diff时间过长导致的页面卡顿问题，React Fiber 用类似于requestIdleCallback的机制来做异步diff。但是dom数结构不支持这样的实现，于是react实现了一个类似链表的数据结构，将原来的递归diff变成了现在的遍历diff，从而能方便的做中断和恢复，实现异步可中断可更新

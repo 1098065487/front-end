@@ -1,0 +1,20 @@
+1.类是构造函数的语法糖，本质还是构造，同时有__proto__和prototype两个属性
+
+继承主要看子类的原型链和父类的关系：
+1）子类的__proto__属性，表示构造函数的继承，总是指向父类
+之前es5原型链写过，构造函数的__proto__都是指向Function.prototype，针对父类，他的__proto__属性就是指向Function.prototype，针对子类，他的__proto__指向父类。
+
+2）子类prototype属性的__proto__属性，表示方法的继承，指向父类的prototype属性
+之前es5原型写过，原型链就是通过实例对象__proto__指向父类构造的prototype，父类的prototype里，同样存在__proto__指向更上层prototype从而形成链路，这里就可以这么理解，子类prototype里的__proto__指向更上层prototype，即父类的prototype。
+
+理解有点麻烦，就记吧：
+1）子类的__proto__，表示构造函数继承，指向父类
+2）子类的prototype中的__proto__，表示方法继承，指向父类的prototype
+
+简单理解：
+1）作为一个对象，子类的原型（__proto__）是父类
+2）作为一个构造函数，子类的原型对象（prototype）是父类原型对象（prototype）的实例
+
+2.实例的__proto__属性：
+1）实例的__proto__指向的应该是其构造的原型对象，然后，子类的实例的__proto__属性，指向的     是其父类的原型对象，同时原型对象内部的constructor指向的是子类。
+2）子类实例的__proto__属性的__proto__，指向父类的__proto__，也就是子类原型的原型，是父类     的原型，这一点原型链很容易理解。

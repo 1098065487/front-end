@@ -1,0 +1,12 @@
+1.FixedSizeList，固定子元素大小的长列表
+    height, itemCount, itemSize, width, useIsScrolling, isScrolling
+
+2.VariableSizeList，不定子元素大小的长列表
+    estimatedItemSize, itemSize
+
+3.FixedSizeGrid，固定子元素大小的网格长列表
+    height, columnCount, rowCount, columnHeight, rowHeight, width, useIsScrolling
+
+4.VariableSizeGrid，不定子元素大小的网格长列表
+    columnWidth, rowHeight, estimatedColumnWidth, estimatedRowHeight
+

@@ -1,0 +1,18 @@
+思想：针对于组合继承调用两次父类型构造方法的优化，组合继承中有一次调用父类型构造方法是             将子类型的prototype指向父类型的实例，针对这一步做优化
+    将子类型的prototype指向一个纯净的对象，即父类型的prototype，并将子类型的prototype中的constructor指向回子类型的构造（在指向父类型prototype的拷贝时发生了变化）
+
+function extend(child, parent) {
+    child.prototype = Object.create(parent.prototype);
+    child.prototype.constructor = child;
+}
+
+用 extend(Child, Parent); 代替组合继承中的 Child.prototype = new Parent();
+
+优点：
+1.只调用一次Parent构造，避免了在Parent.prototype上创建不必要的属性。
+2.原型链没有变化，child实例 > child.prototype > parent.prototype > object.prototype > null
+  按组合继承，会有一步链到parent实例
+  因此可以正常使用instanceof 和 isPrototypeOf
+
+寄生组合式继承  是  引用类型  最理想的继承范式。
+         

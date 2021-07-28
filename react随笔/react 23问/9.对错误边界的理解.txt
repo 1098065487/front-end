@@ -1,0 +1,28 @@
+Error Boundares：错误边界
+概念：错误边界是React组件，可以在子组件树的任何位置捕获javascript错误，记录这些错误，并显示一个备用UI，不至于整个组件树崩溃，出现白屏情况
+
+注意，错误边界无法捕获以下错误：
+1）事件处理错误
+2）异步代码错误
+3）服务端渲染错误
+4）错误边界自身抛出的错误（必须是子组件）
+
+封装一个错误边界案例：
+class ErrorBoundary extends React.Component<IProps, IState> {
+  constractor(props: IProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.log('组件崩溃Error', error);
+    console.log('组件崩溃info', errorInfo);
+  }
+  render() {
+    return this.state.hasError ? (<h1>Something went wrong</h1>) : this.props.children;
+  }
+}
+
+在开发模式下，项目始终会报错，但在生产环境下，项目会走到错误边界，用错误边界设置的UI代替渲染错误的组件，前提是用错误边界包裹需要这样效果的组件，可以是根组件或其他组件

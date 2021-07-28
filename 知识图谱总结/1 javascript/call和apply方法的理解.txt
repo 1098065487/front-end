@@ -1,0 +1,8 @@
+call和apply方法主要目的，就是改变调用他们的函数中的this指向
+
+function add(c, d) {
+    return this.a + this.b + c + d;
+}
+var o = { a: 1, b: 2 };
+add.call(o, 3, 4);         // 1+2+3+4 = 10
+add.apply(o, [6, 7])         // 1+2+6+7 = 16

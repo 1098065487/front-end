@@ -1,0 +1,8 @@
+对于盒子的理解，可以将能包裹内容的标签视为盒子，如div，span，a，不是盒子的标签，如图片，表单，都不能在里面放置内容
+
+盒子模型关注点：width，height，padding，border，margin
+
+css盒模型和IE盒模型的区别：
+1）标准盒模型中，width和height指内容区域宽度和高度，增加padding和border只影响总尺寸
+2）IE盒模型中，width和height指内容区域+padding+border的宽度和高度
+两种模型在同等情况下，总的占位尺寸是一样的，但是获取到的width和height不一样

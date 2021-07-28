@@ -1,0 +1,102 @@
+理解：
+Refs是一个获取DOM节点或react元素实例的工具，通过ref，可以访问到dom或react元素，从而在不需要数据变动引发刷新的情况下，对页面进行操作。
+
+较早版本使用ref，是通过回调使用，目前，一般通过React.createRef()创建使用。
+创建ref后，任何dom或react元素使用了ref属性，并绑定创建的ref，就可以在任何使用创建的ref的地方，通过current获取的绑定的dom或react元素。
+
+具体使用：
+1.ref属性用于普通dom元素上，绑定的创建的ref接受这个dom作为其current属性：
+class TestComp extends React.Component {
+  constructor(props) {
+    super(props);
+    // 创建一个 ref 来存储 DOM元素 input
+    this.textInput = React.createRef();
+    this.focusEvent = this.focusEvent.bind(this);
+  }
+  focusEvent() {
+    // 直接通过原生API访问输入框获取焦点事件
+    this.textInput.current.focus();
+  }
+  render() {
+    return (
+      <div>
+        <input type="text" ref={this.textInput} />
+        <input type="button" value="获取文本框焦点事件" onClick={this.focusEvent}/>
+      </div>
+    );
+  }
+}
+上面例子中，第一个input使用ref属性绑定了创建的ref，就可以第二个input button点击时，点击事件内通过创建的ref的current获取第一个input的dom，具体效果是，点击button，让第一个input获取焦点。
+
+2.当ref属性作用于react类组件时，绑定的创建的ref获取到的是这个类组件挂载实例作为current
+（实例即this没毛病吧）
+父组件：
+class ParentComp extends React.Component {
+  constructor(props) {
+    super(props);
+    // 创建ref 指向 ChildrenComp 组件实例
+    this.textInput = React.createRef();
+  }
+
+  componentDidMount() {
+    // 调用子组件 focusTextInput方法 触发子组件内部 文本框获取焦点事件
+    this.textInput.current.focusTextInput();
+  }
+
+  render() {
+    return (
+      <ChildrenComp ref={ this.textInput } />
+    );
+  }
+}
+子组件：
+class ChildrenComp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+  }
+  focusTextInput() {
+    this.inputRef.current.focus();
+  }
+  render(){
+    return(
+      <div>
+        <input type='text' value='父组件通过focusTextInput()方法控制获取焦点事件' ref={ this.inputRef }/>
+      </div>
+    )
+  }
+}
+忽略子组件中的ref不看的话，上面就是父组件通过创建ref和子组件的ref属性绑定，从而可以通过创建的ref的current属性，获取子组件挂载时的实例，包括初始属性和方法，从而可以使用
+子组件的ref是为了获取焦点使用，可以不看免受干扰，最终效果就是，组件在挂载后，父组件didmount，调用ref获取的子组件的方法，从而表现为获取到子组件input的焦点。
+
+3.函数组件上使用ref，需要参考hook的useRef，结合useImperativeHandle
+
+回调Refs：较早版本中常用的使用refs的方式
+1.其实和React.createRef()的使用类似，只不过ref属性绑定的不是react创建的ref，是一个函数，在函数中，将dom或react元素绑定到自定义的this对象属性上，这样，在自定义的this对象属性存在的情况下，就可以通过他，访问到绑定的dom或react元素。
+class TestComp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.textInput = null;
+    // 使用'ref'的回调函数将 text输入框DOM节点的引用绑定到 React实例 this.textInput上
+    this.inputRef = element => {
+      this.textInput = element;
+    }
+    this.focus = () => {
+      if (this.textInput) {
+        this.textInput.focus();
+      }
+    }
+  }
+  componentDidMount() {
+    this.focus();
+  }
+  render() {
+    return (
+      <div>
+        <input type='text' ref={ this.inputRef } />
+      </div>
+    );
+  }
+}
+
+2.在类组件中，回调Refs通常是  父组件把refs回调函数通过props传给子组件，子组件再把相同的函数作为ref属性传给dom，从而父组件可以通过ref回调中绑定的this对象属性，获取子组件中dom

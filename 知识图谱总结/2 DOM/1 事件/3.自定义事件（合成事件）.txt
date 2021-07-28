@@ -1,0 +1,22 @@
+1.创建自定义事件：
+事件可以通过Event构造函数创建：
+var event = new Event('build');            // 创建自定义事件
+elem.addEventListener('build', function(e) { ... });        // 添加自定义事件监听
+elem.dispatchEvent(event);              // 触发自定义事件
+
+2.添加自定义数据：
+使用CustomEvent接口，可以创建携带额外数据的事件对象，在事件监听绑定的function中，可以通过element访问到
+var event = new CustomEvent('build', { 'detail': elem.dataset.time });
+elem.addEventListener('build', eventHandler(e) { console.log(e.detail) });
+
+3.自定义事件事件冒泡：
+由子元素触发事件，让祖先元素捕获（原生事件冒泡是同一个事件向上冒泡）
+做法：祖先元素添加自定义事件及监听，对子元素添加事件监听，处理函数中触发祖先自定义事件
+
+4.动态创建和派发事件
+原理：元素可以侦听尚未创建的事件
+对比3自定义事件的冒泡，祖先元素在添加自定义事件监听的时候，并没有先创建自定义事件，将自定义事件的创建，放到子元素监听事件的处理函数中，触发祖先自定义事件时，创建祖先自定义事件，这样实现动态创建和派发事件
+
+5.触发内置事件
+当自定义事件和原生事件同名时，会同时触发原生事件的事件监听，这是消除的方法，是阻止默认事件
+

@@ -1,0 +1,13 @@
+针对react性能优化，shouldComponentUpdate能在页面元素对比前，告知有无变更发生，若无，返回false，React将跳过元素diff检查，节省时间，对性能影响较大。
+
+使用React.PureComponent，而不是React.Component，可以自动在shouldComponentUpdate中比较props和state。
+
+注意一点，PureComponent中的自动比较是浅层比较（Object地址值不会变），对于对象的内层变化，会有检查不到的情况，更大的问题是，对象即使内容看上去未变，地址值也是不同的，导致一直识别到变化，造成性能问题。
+
+所以应该是在props和state较为简单时，使用PureComponent，目前公司的前端代码没有保证这一点，其实是有性能需要优化的。
+
+目前公司代码关于此普遍问题是：props和state结构复杂，一般是对象，在比较时一直识别为变化，导致使用PureComponent没有意义。
+要想优化这一点，需要对props和state在shouldComponentUpdate时进行个性化的深层对比，此时用PureComponent或Component都行。
+
+即使是hook组件，也会存在同样的问题，函数组件接到的参数为对象时，在对比时，也是总是识别到变化，去刷新调用。
+但是可以使用memo等Memoization函数去监听外部变量是否变化，在变化的情况下，采取重新调用刷新，类似的方法在类组件中也有，比如统计页，antd pro自带的memo引用子组件的形式。

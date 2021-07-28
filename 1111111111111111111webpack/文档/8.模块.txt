@@ -1,0 +1,22 @@
+1.什么是模块
+在模块化编程中，开发者将程序分解成离散功能块，并称之为模块
+
+模块具有比完整程序更小的接触面，使得校验、调试、测试轻而易举，精心编写的模块提供了可靠的抽象和封装界限，使得每个模块都具有条理清楚的设计和明确的目的
+
+2.什么是webpack模块
+对比node.js模块，webpack模块能够以各种方式表达他们的依赖关系（看上去这样的描述更像是表现形式，而不是定义）
+例子如下：
+1）es6 中的import语句
+2）CommonJS 中的require()语句
+3）AMD 中的define和require语句
+4）css/sass/less 中的@import语句
+5）样式url(...)和html文件<img src=...>中的图片链接
+
+3.webpack支持的模块类型
+由于loader，webpack可以支持各种语言和预处理器编写模块，包括：
+1）CoffeeScript
+2）TypeScript
+3）ESNext（Babel）
+4）Sass
+5）Less
+6）Stylus

@@ -1,0 +1,12 @@
+1.外部资源：
+引用外部资源时，找国内比较好的静态资源库（cdn加速）
+如：http://www.staticfile.org/
+    <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/4.5.0/css/swiper.min.css">
+    <script src="https://cdn.staticfile.org/Swiper/4.5.0/js/swiper.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+2.图片
+无论是<img>的图片，还是背景图片，都需要使用懒加载的策略来动态加载资源，这对于页面资源较大的页面加载速度很重要，其实，前端在做开发的时候，动态加载资源的思想很重要，懒加载用在很多地方。具体实现单独写。
+
+3.视频：
+视频的加载，也存在懒加载一说，其实，使用<video>，设置不自动播放已经有分段加载的效果了，设置preload="none"甚至可以连初始帧都不加载，但同时需要配置poster提供占位图片，这样在打开视频时会有一个明显的加载过程，也不太推荐。

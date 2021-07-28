@@ -1,0 +1,20 @@
+flux存在一些缺点：
+1）一个应用可以拥有多个store，多个store之间可能有依赖关系
+2）store封装了数据还有处理数据的逻辑
+
+
+redux中三个重要概念：store  action  reducer
+1.redux中只有一个store，整个应用的数据都在这个大store中，store中的state不可直接修改，只能每次返回一个新的state，store允许store.subscribe方法设置监听，一旦state变化，触发监听函数，如在react中，将render方法和setState方法订阅到监听
+2.redux中action作为view发出通知使用，告诉store state要改变，action必须要一个type属性，代表名称区分，其他可设置一堆属性，作为参数提供给state变更使用（一般为payload属性）
+3.reducer在redux中有点类似对标于dispatcher在flux中的作用，在redux中，store中集成了dispatch方法，store.dispatch()是view发出action的唯一方法，reducer是一个纯函数，store接收action后，没有直接修改state，而是返回一个新的state，这个过程就叫reducer
+
+reducer工作类似于：
+(previousState, action) => newState
+dispatcher工作类似于：
+(state, action) => state
+
+redux工作流程：
+1）用户通过view发出action
+2）store自动调用reducer，传入两个参数，当前state和action，返回新的state
+3）state变化，store调用监听函数监听到
+4）listener通过store.getState()得到当前状态，触发重新渲染view

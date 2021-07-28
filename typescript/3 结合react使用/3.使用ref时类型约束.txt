@@ -1,0 +1,14 @@
+在组件中使用ref，流程是先用React.creatRef()创建一个ref，再将创建的ref传入需要用到的子组件中，使用ref针对ts的类型约束，在创建是针对React.creatRef<>()使用泛型，因为ref是Dom，需要根据具体情况传入dom类型：
+private inputRef = React.createRef<HTMLInputElement>()
+...
+<input
+ ref={this.inputRef}
+ className="edit"
+ value={this.state.itemText}
+/>
+
+如果传入的是div组件的话，类型就是HTMLDivElement
+
+实际上，这种处理方式比较简单，当父子组件，在父组件想要调用子组件的方法时，子组件dom不一定绑定ref属性（比如回调ref写法时，但是好像也不用create了。。。），这种情况下，该是什么类型无法判断，只能说还没见过用Ref.create()在class父子组件中的用法（应该是直接给子组件添加ref属性，但是是什么dom元素无从得知）
+
+当不使用dom，仅使用ref作为存储历史上一步值的特性时，它的类型就不需要根据dom类型来判断了，比如useRef里面，常常有useRef<number>，useRef<string>的用法。

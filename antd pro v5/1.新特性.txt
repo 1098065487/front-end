@@ -1,0 +1,4 @@
+1.简易数据流方案：
+v5前的版本都是使用dva的数据流方案，需要重复写model，model内部还需要些effects，reducer来解决同步异步，相对而言比较复杂
+v5针对公共数据，使用useModel的公共model initailState来存储公共数据，供不同页面使用，针对仅消费本页面请求数据的情况，消除model，直接发请求获取数据消费
+useModel中model的写法和以前model的写法大不相同，默认文件名为namespace，作为函数输出，输出state和方法（可以在src/model文件夹下新建公共model，再使用useModel去调用）

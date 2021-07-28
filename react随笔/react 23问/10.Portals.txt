@@ -1,0 +1,7 @@
+Portal 提供了一种将子节点渲染到存在于父组件以外的dom节点的优秀方案
+
+用法：
+ReactDOM.createPortal(child, container)
+child是任意可渲染的react子元素，container是一个DOM元素
+
+典型用例：当父组件有overflow: hidden或z-index样式时，需要子组件能在视觉上跳出容器，如对话框，悬浮卡，提示框

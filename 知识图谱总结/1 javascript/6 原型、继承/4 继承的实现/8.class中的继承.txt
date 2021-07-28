@@ -1,0 +1,13 @@
+首先说明，es6 class实现的继承效果，和es6之前寄生组合继承一样，过程略有不同
+
+1.几个关键字：extends, constructor, super
+1）extends实现类之间的继承，但是extends后面不一定接class，构造函数也行
+2）constructor构造和super成对出现，不写的话也会默认添加上，在子类中，constructor是构造子类的构造函数，super是用来产生实例this，即先用super()调用父类构造，生成实例this，再调用子类构造去修改this
+
+2.super用法：作为函数调用和作为对象调用
+1）作为函数调用，代表父类构造，返回子类实例，super内部this指向子类实例，super(); 相当于Parent.constructor.call(this);
+2）作为对象调用，普通函数中super指向父类原型，静态函数中，指向父类，使用super调用父类方法时，会绑定子类的this，相当于Parent.prototype.fn.call(this)
+
+3.寄生组合继承和class继承的区别：
+1）寄生组合继承，有一步在子类构造中调用父类构造，将父类属性和方法添加到实例对象上，也就是this上，这一步是会先创建子类的实例this，在通过call/apply，用子类this去调用父类构造
+2）class继承有所不同，在子类constructor中，先调用super()，会调用父类构造，创建父类的实例this，再调用子类构造修改this指向子类实例，并返回子类的实例this，一句话，super()代表父类构造，返回的结果是子类的实例this

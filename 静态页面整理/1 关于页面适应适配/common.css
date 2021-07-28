@@ -1,0 +1,50 @@
+// common.css主要初始化页面标签元素，避免干扰；消除a标签及ul的下滑线；清除浮动
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, img, strong, b, i, dl, dt, dd, ol, ul, li, form, label, table, tbody, thead, tr, th, td, article,
+aside, footer, header, menu, nav, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    outline-style: none;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style: none;
+    box-sizing: border-box;
+}
+
+a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    text-decoration: none;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+.clearfix::after {
+    content: "";
+    height: 0;
+    line-height: 0;
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+    /*IE/7/6*/
+}

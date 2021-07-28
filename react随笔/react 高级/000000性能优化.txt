@@ -1,0 +1,6 @@
+这里注意下，对于大量数据，比如一次上千条上万条数据的渲染展示，很建议去看虚拟滚动列表的实现，具体库如：
+1.react-window，https://react-window.now.sh/#/examples/list/variable-size
+2.react-virtualized，https://bvaughn.github.io/react-virtualized/#/components/List
+
+
+

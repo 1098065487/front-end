@@ -1,0 +1,17 @@
+1.两个概念：
+__proto__属性：浏览器实现的，所有对象都有的属性，指向其构造函数的原型对象prototype
+prototype：只有函数对象才有的，原型对象，且prototype中的constructor指向函数本身
+
+2.原型链：
+每个对象都有__proto__属性，指向其构造函数的原型对象prototype，prototype也是对象，也存在__proto__属性，指向其构造函数的prototype，直到最上层对象null，这样的链路就叫做原型链
+原型链的作用：（访问对象属性，查找按照原型链的链路上溯，直到null，未找到返回undefined）
+
+3.链路：var person = new Person();
+1）一般对象的原型链（person对象）
+person.__proto__  ->  Person.prototype
+Person.prototype.__proto__  ->  Object.prototype（prototype也是一个一般对象）
+Object.prototype.__proto__  ->  null
+2）函数对象的原型链（Person构造函数）
+Person.__proto__  -> Function.prototype
+Function.prototype.__proto__  ->  Object.prototype
+Object.prototype.__proto__  -> null

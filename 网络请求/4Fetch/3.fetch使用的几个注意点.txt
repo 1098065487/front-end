@@ -1,0 +1,51 @@
+1.携带请求凭据（headers属性对象上Authorization属性）
+使浏览器发送包含凭证的请求（不管是否跨域，会在headers属性对象内加上Authorization属性），需要在fetch()的第二个参数中加上配置：credentials: 'include'
+代码：fetch('https://example.com', {
+  	credentials: 'include'  
+          })
+只在请求同源的情况下发送凭据：credentials: 'same-origin'
+不在请求中包含凭据：credentials: 'omit'
+
+2.发送Json格式数据
+一般出现在非get请求中，需要配置headers属性对象上的Content-Type属性为'application/json'，并把数据以json格式传递到配置对象中（见过传到data属性上，这里是body）
+var url = 'https://example.com/profile';
+var data = {username: 'example'};
+
+fetch(url, {
+  method: 'POST', // or 'PUT'
+  body: JSON.stringify(data), // data can be `string` or {object}!
+  headers: new Headers({
+    'Content-Type': 'application/json'
+  })
+}).then(res => res.json())
+.catch(error => console.error('Error:', error))
+.then(response => console.log('Success:', response));
+
+3.上传文件到服务端
+实现方法要看具体情况，这里给个使用<input type='file'>，使用FormData对象和fetch()的例子，一般看前端框架，会有文件上传组件：
+不用配置（存疑，记得也是配置Content-Type），直接把FormData类型的数据，传递到配置对象
+var formData = new FormData();
+var fileField = document.querySelector("input[type='file']");
+
+formData.append('username', 'abc123');
+formData.append('avatar', fileField.files[0]);
+
+fetch('https://example.com/profile/avatar', {
+  method: 'PUT',
+  body: formData
+})
+.then(response => response.json())
+.catch(error => console.error('Error:', error))
+.then(response => console.log('Success:', response));
+
+4.还有多文件上传，类似上面，遍历用append()，将多文件添加到一个FormData对象某属性上即可
+var formData = new FormData();
+var photos = document.querySelector("input[type='file'][multiple]");
+
+formData.append('title', 'My Vegas Vacation');
+// formData 只接受文件、Blob 或字符串，不能直接传递数组，所以必须循环嵌入
+for (let i = 0; i < photos.files.length; i++) { 
+    formData.append('photo', photos.files[i]); 
+}
+
+关于上传文件，不同前端框架，实现可能会更简单，看具体情况而定

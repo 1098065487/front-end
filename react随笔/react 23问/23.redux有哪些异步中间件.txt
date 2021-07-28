@@ -1,0 +1,8 @@
+1.redux-thunk
+源代码简短优雅，上手简单
+
+2.redux-saga
+借助于js的generator来处理异步，避免了回调的问题
+
+3.redux-observable
+借助于RxJS流的思想以及其各种强大的操作符，来处理异步问题

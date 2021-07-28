@@ -1,0 +1,19 @@
+思想：通过在子类型构造函数中调用超类型构造函数，使用.call()绑定子类型的this到父类型，从而          实现父类型的构造，让子类型的实例获取父类型的属性和方法。
+
+function Parent(name) {
+    this.name = name;
+}
+function Child(name) {
+    Parent.call(this, name);
+}
+var child1 = new Child('tom');
+child1.name     // tom
+var child2 = new Child('jerry');
+child2.name     // jerry
+
+优点：（主要解决原型链继承的两个问题）
+1.避免了父类型引用类型的属性被所有实例所共享（构造实现的实例是独立的，引用地址不同）
+2.可以在子类型的构造中向父类型传参，实现属性不同属性值（如上）
+
+缺点：
+想要继承的方法在构造函数中定义，每次创建实例都会创建一次方法（这是不必要的）

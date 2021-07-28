@@ -1,0 +1,49 @@
+1.函数组件的类型检查，第一步肯定是对props进行约束，一般是定义好props接口形式，再导出
+
+2.最常用的是：用React.FC<IProps>进行类型约束，因为在FC中已经定义了默认的props（如children）以及一些静态属性（如defaultProps）
+
+3.不直接用export default导出组件，起码要先命名好组件，一般先定义好，然后export default导出
+
+4.实际上，使用React.FC并不能很好的支持defaultProps，比较推荐的做法：
+export interface HelloProps {
+    name?: string;    // 声明为可选，就可以添加默认值了
+}
+export const Hello: React.FC<HelloProps> = ({ name: 'TJ' }) => <div>hello { name } !</div>
+
+5.泛型函数组件：泛型在列表型和容器型组件中比较常用，可以根据数据，做类型推断
+export interface ListProps<T> {
+    visible: boolean;
+    list: T[];
+    renderItem: (item: T, index: number) => React.ReactNode;
+}
+export function List<T>(props: ListProps<T>) {
+    return <div />;
+}
+
+function Test() {
+    return (
+        <List list={[1, 2, 3]} renderItem={i => { ... }} />;     // 可以自动推断出i为number类型
+    );
+}
+
+6.react提供了带children的props的类型，PropsWithChildren<>（泛型），在嵌套组件时，可以用泛型类型约束props，其后的代码就可以获取props.children
+import React, { PropsWithChildren } from 'react';
+export interface LayoutProps {};
+export function Layout(props: PropsWithChildren<layoutProps>) {
+    return <div className='layout'>{props.children}</div>
+}
+
+7.refs
+实际使用中，ref的方法需要类型约束
+1）用的最多的是useRef，一般使用泛型约束，约束范围为想要绑定的属性和方法
+export interface MyModalMethod {
+    show(): void;
+}
+const modal = useRef<MyModalMethod | null>();
+2）有时候会用到forwardRef，这里提一下，当和connect()联合使用时，为了不报错，一般不用forwardRef，类型约束同样是泛型
+export interface MyModalProps {
+    title?: React.ReactNode;
+    onOk?: () => void;
+    onCancel?: () => void;
+}
+const MyModal = forwardRef<MyModalMethod, MyModalProps>((props, ref) => { ... });

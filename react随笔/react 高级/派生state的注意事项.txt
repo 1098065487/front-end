@@ -1,0 +1,5 @@
+派生state，是指state由props派生而来，这有他的应用场景，但是同样存在他的问题，经典的，props的变化，不会引起state的变化
+
+经典的解决办法是利用生命周期函数getDerivedStateFromProps，让组件在props变化时更新state
+
+官网给的推荐是修改组件的key，这样就可以在修改props的时候，同时修改state

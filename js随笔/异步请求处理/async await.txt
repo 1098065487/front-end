@@ -1,0 +1,15 @@
+1.async 和 await是es8新属性：
+    async声明一个异步函数，该函数返回一个Promise对象
+    await 后面的语句，会等待await语句执行完毕才会继续执行下去
+
+2.可以将promise解析中的.then()通过await替换掉，使代码更清晰。
+      其实就是将then()中执行的语句，放在await后面做替换，都是等待前面promise有结果后，才      开始执行，async/await是基于Promise的语法糖。
+
+和使用Promise对象链式调用一样，使用async await可以有效解决回调地狱问题
+无论是Promise的then()还是async的await，都是等待有结果后，才开始执行下去。
+
+async/await使异步代码看上去更像同步。（尽管Promise也是如此，await更简洁）
+
+使用中发现：async仅仅是声明函数为异步，实际异步调用是跟在await后面，而在async await结构中，可以直接使用异步方法返回的Promise对象，无须再序列化
+
+简单理解可以看作使用async声明后，使用await发出异步请求，await后面的操作就和then、catch处理一样，只不过不需要这样的结构了

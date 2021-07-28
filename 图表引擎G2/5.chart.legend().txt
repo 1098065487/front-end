@@ -1,0 +1,22 @@
+1.传入boolean设置是否显示图例
+	chart.legend(false);
+2.传入对象对图例进行整体配置
+3.对单个字段的图例进行配置，两个参数，分别是字段名和该字段名下图例的配置
+
+4.重要参数：
+1）layout 图例布局方式，横或竖（horizontal 或 vertical）
+2）position 图例的展示位置
+3）flipPage 仅用在分类图例，是否进行分页（分类图例过多）
+图例单项配置：
+1> name 名称
+2> spacing 图例marker和name的间距
+3> value 配置字段
+4> formatter name的格式化函数
+5> marker 图例图标配置
+	symbol 形状
+	style 样式，如配置填充色（fill: color, r: number  针对circle的配置）
+6> custom 是否自定义图例，配置true时，需要配置items属性
+7> items 自定义图例的内容
+	name 名称
+	value 值的配置字段
+	marker 图形标记，和5>一样

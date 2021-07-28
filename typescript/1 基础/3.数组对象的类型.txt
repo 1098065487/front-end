@@ -1,0 +1,17 @@
+1.数组属于一种特殊的对象，描述数组的类型，不适用接口：
+
+1-1.类型 + 方括号 表示法
+         : number []
+
+1-2.数组泛型：
+    : Array<number>
+    需参考泛型
+
+1-3.类数组：
+      类数组顾名思义，类似数组的对象，不是真正的数组
+      当索引类型为数字时，值的类型必须时数字，同时还有length和callee属性
+
+针对类数组，一般都有自己的接口定义，如IArguments, NodeList, HtmlCollection
+需参考内置对象
+
+let args: IArguments = arguments;

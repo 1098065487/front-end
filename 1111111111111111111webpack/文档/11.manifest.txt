@@ -1,0 +1,15 @@
+webpack构建应用中，有三种主要代码类型：
+1）自己编写的源码
+2）源码依赖的第三方库
+3）webpack的runtime和manifest，管理所有模块的交互
+
+runtime，以及伴随的manifest数据，主要指，在浏览器运行时，webpack用来连接模块化的应用程序的所有代码。
+
+1.runtime
+runtime包含：在模块交互时，连接模块所需的加载和解析逻辑。包括浏览器中已加载模块的连接，以及懒加载模块的执行逻辑。
+
+2.manifest
+理解：当编译器（compiler）开始执行、解析和映射应用程序时，它会保留所有模块的详细要点，          这个数据集合就称为manifest
+当打包完成，发送浏览器时，会在运行时通过manifest来解析和加载模块
+
+通过使用manifest中的数据，runtime能够查询模块标识符，检索出背后对应的模块，runtime和manifest组合，就是打包后。webpack可以正确加载和解析模块的基础功能

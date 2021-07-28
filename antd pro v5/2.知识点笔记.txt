@@ -1,0 +1,8 @@
+1.针对ant design pro项目，样式自定义问题：
+1）公共样式直接在global.less中写样式覆盖即可
+2）特有样式，需要加:global {...}包裹样式，且global外层需要加className包裹定位，可以定义在任意less文件中，包括global.less，但是必须引用使用。
+
+2.使用Form组件时，无论版本：
+1）出现Form.Item不在同一层，子层的Form.Item在需要清空时，不应使用form.resetFields( xxx )，会导致值第一次不被清空，第二次走到方法才会被清空，且不能在一个方法里面调用两次（无效），应当使用form.setFieldsValue({ xxx: undefined })，会被识别为即时清空。
+2）当出现form.Item内，没有直接包裹form表单元素，会出现表单元素事件及值的绑定不被Form.Item获取，需要在表单元素上，设置初始值为form.Item绑定的初始值，并在表单元素onChange方法上，设置form.setFieldsValue，值为变化的值，以此主动绑定form。
+注意：当出现2）的情况时，不建议这么写，会导致外围使用form对该表单元素进行操作时不生效，处理起来比较麻烦，特别是修改初值，建议修改成1）的形式来处理，更易解决些。

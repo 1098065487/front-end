@@ -1,0 +1,11 @@
+对render props的理解，可以参考高阶组件，在某种程度上，两者是相似的
+
+都是由解决横切关注点问题拓展来的：
+1.高阶组件是以组件作为参数，组合返回新的组件
+2.render props是将返回组件的函数作为其他组件的属性，从而组合使用这个组件
+结果都是对组件进行复用
+
+对于此：可以使用render props的方式来实现大多数高阶组件
+
+但是要注意：render props 和 React.PureComponent 一起使用时，会浅比较props，render props是函数属性，总会识别为变化，导致PureComponent作用丧失
+有一个解决办法是将render props传递的函数定义到类的实例上去，这样实例不变，就不会识别成变化，如果不可以，则使用React.Component

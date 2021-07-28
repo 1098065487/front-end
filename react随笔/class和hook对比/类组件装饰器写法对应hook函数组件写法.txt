@@ -1,0 +1,36 @@
+1.类组件：
+类组件装饰器写法，代码少，结构清晰：
+@connect(({ platform, loading }) => ({
+  platform,
+  loading: loading.effects['platform/fetchProductReports'],
+}))
+@Form.create()
+class SearchList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return ();   
+  }
+}
+export default SearchList;
+
+2.react hook 函数组件（其实就是不使用装饰器，仍用函数处理组件）：
+const SearchList = props => {
+  const { form } = props;
+  return ();
+}
+
+const ReturnSearchList = Form.create()(SearchList );
+export default connnect(({ platform, loading }) => ({
+  platform,
+  loading: loading.effects['platform/fetchProductReports'],
+}))(ReturnSearchList)
+
+或者直接写一块
+
+export default connnect(({ platform, loading }) => ({
+  platform,
+  loading: loading.effects['platform/fetchProductReports'],
+}))( Form.create()( ReturnSearchList ) )

@@ -1,0 +1,8 @@
+1.dva的封装基于redux（connect），redux-saga（主要是异步），引入Elm概念组织model，使得对state，reducer，action，saga的处理封装到一起（model）。
+
+2.dva的model封装了：
+    namespace：reducer连接到rootReducer的key，使用connect绑定state到页面props时，使用                         的key，这里说一句，dva的connect和react-redux的connect一致。
+    state：就是reducer的initialState。
+    effects：对应saga，处理异步逻辑。
+    reducers：同步更新state。
+    subscriptions：订阅数据源（发现没怎么用，可以根据条件的监听，转发需要的action，如监听                           快捷键去添加数据这种）

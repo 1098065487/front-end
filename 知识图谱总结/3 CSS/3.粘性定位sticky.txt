@@ -1,0 +1,10 @@
+1.概念：
+position: -webkit-sticky;   // 兼容safari
+position: sticky;
+配合定位元素top/bottom或横向滚动的left/right，可以实现粘性定位，即元素dom位置在屏幕内时，表现为relative，仍在默认关联位置，不在屏幕内时，表现为fixed，结合定位属性，固定位置
+
+2.关注点：
+sticky属性完全受限于父级元素
+1）父级元素不能有overflow: visible外的其他overflow属性设置，否则sticky不生效
+2）父级元素高度和粘性定位元素等高时，也会没有粘性效果
+3）同一个父容器下的sticky元素，定位值相等时，会重叠，如果多套一层，让其属于不同父类，相同定位值的sticky元素会随着滚动依次覆盖上一个元素，形成层次滚动交互效果

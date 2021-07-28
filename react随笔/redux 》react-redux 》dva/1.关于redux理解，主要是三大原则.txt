@@ -1,0 +1,8 @@
+1.程序（页面）的state被存储在一个唯一的Object对象中。数据的变动体现在Object内部变动。
+
+2.state只读，改变state的唯一方法是：通过action触发state变动（reducer）执行。
+
+3.reducer描述了state根据action变动的规则，reducer是纯函数。
+
+
+自己理解总结：redux将UI和数据分离，并将数据的管理提升，整个redux就是基于三大原则的思路，对组件数据管理做了合理的处理。

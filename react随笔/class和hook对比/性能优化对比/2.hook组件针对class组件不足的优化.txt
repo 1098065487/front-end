@@ -1,0 +1,5 @@
+1.类组件的性能优化，与shouldComponentUpdate优化有关，一般实现较为麻烦（个性化定义shouldComponentUpdate的条件判断）。hook组件针对此优化方案更优雅：
+
+  1.使用useCallback，允许在重新渲染之间保持相同的回调引用，以使得shouldComponentUpdate继续工作，表现为：使用useCallback仅在依赖变化的情况下，变化。
+  2.使用useMemo，使控制具体子节点何时更新变得更容易，表现为：使用useMemo的值，仅在依赖变化的情况下变化，从而更新。
+  3.使用useReducer，减少了对深层传递回调的依赖，具体表现为：将useReducer的dispatch下传到子级组件，可在子级组件直接使用dispatch传递action，进行变化

@@ -1,0 +1,25 @@
+构建目标target，可以指定打包的构建配置，如node环境还是浏览器环境，乃至多个target的配置
+
+配置示例：
+module.exports = {
+    target: 'node
+};
+
+多target配置：
+尽管不支持target传入多个字段，但是可以通过配置两份分离的配置来创建同构的库
+var path = require('path');
+var serverConfig = {
+  target: 'node',
+  output: {
+    path: path.resolve(_dirname, 'dist'),
+    filename: 'lib.node.js',
+  }
+};
+var clientConfig = {
+  target: 'web',  // 默认是web，可省略
+  output: {
+    path: path.resolve(_dirname, 'dist'),
+    filename: 'lib.js',
+  }
+};
+module.exports = [ serverConfig, clientConfig ];

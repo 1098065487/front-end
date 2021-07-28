@@ -1,0 +1,15 @@
+1.思想：
+以实现一个子类继承多个父类为目标，将多个对象的属性和方法拷贝到目标对象，同名情况，后面覆盖前面，类似Object.assign()
+function Child() {
+  Parent.call(this);
+  OtherParent.call(this);
+}
+Child.prototype = Object.create(Parent.prototype);
+Object.assign(Child.prototype, OtherParent.prototype);
+Child.prototype.constructor = Child;
+
+其实本质还是使用了寄生组合继承，子类构造中嗲用父类构造，子类原型指向以父类原型为原型的纯净对象，并将子类原型中的constructor指向转回子类构造，只不过这里的父类是多个，子类构造中，调用多个父类构造，通过Object.assign()处理原型之间的整合
+
+2.注意点：
+1）子类实例的原型是Object.assign(Object.create(Parent.prototype), OtherParent.prototype)
+2）子类实例原型对象的原型是Parent.prototype，这里注意下，先是继承了Parent的原型链，然后才修改的Child.prototype，修改行为和Parent.prototype.__proto__无关，一直指向父类原型对象，所以子类的原型链上，有Parent.prototype，但是和OtherParent无关

@@ -1,0 +1,13 @@
+1.headers属性对象是包括在fetch()第二个参数（配置对象）中的。
+
+2.fetch提供了Headers接口，可以通过Headers(）构造函数来创建自定义headers对象
+
+3.headers可以在request请求中被发送或者在response请求中被接收，并且有些可以被改写，Headers对象中存在guard属性，没有暴露给web，规定headers对象的操作：
+none：默认的
+request：从 request 中获得的 headers（Request.headers）只读
+request-no-cors：从不同域（Request.mode no-cors）的 request 中获得的 headers 只读
+response：从 response 中获得的 headers（Response.headers）只读
+immutable：在 ServiceWorkers 中最常用的，所有的 headers 都只读
+
+4.headers具体的参数配置
+就是HTTP的headers配置，需要去开一篇HTTP

@@ -1,0 +1,8 @@
+受控组件在状态变化的时候，一般需要用事件回调将状态值改变，比如OnChange事件，由于react内部的事件都是合成事件，不是原生事件，在使用ts时，一般需要定义下事件类型
+
+比如input的onChange事件：
+private updateValue(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ itemText: e.target.value });
+}
+
+e的事件类型太多，一般建议在组件上添加事件时，查看代码提示，一般会带有类型提示，不然就要去百度查了

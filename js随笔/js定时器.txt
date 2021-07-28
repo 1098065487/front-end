@@ -1,0 +1,21 @@
+js定时器有两种，setTimeout 和 setInterval
+使用的格式都是一样的，两个参数，第一个回调函数，第二个计时时间（ms）
+
+但是，从理解上：
+将setTimeout当作定时器，设置时间，到时间就执行回调函数（仅一次）
+将setInterval当作计时器，设置时间，到时间就执行一次回调，一直持续
+更容易理解些
+
+难点：
+1.setInterval的触发时机：
+1）回调函数执行时间小于设定时间，按设定时间顺序一次一次触发
+2）回调函数执行时间大于设定时间，但是小于设定时间的两倍，按顺序执行完触发
+3）回调函数执行时间大于设定时间的两倍以上，按顺序执行完触发，会丢弃中间等待的队列事件
+
+2.setTimeout中回调函数的this指向的是全局对象
+
+
+使用：
+setInterval一般组合使用，需要主动关闭：
+var intervalId = setInterval(func, delay);
+clearInterval(intervalId);

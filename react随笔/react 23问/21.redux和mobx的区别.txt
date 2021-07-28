@@ -1,0 +1,8 @@
+由项目开始的react学习，已经是由初期的dva转到目前的简易数据流，一直没有细看react项目的状态管理，这部分还是有欠缺的，不过目前的hooks普及，使用函数式编程，对状态管理的要求貌似也没有这么高了，有时间还是有待好好整理redux这一块内容
+
+链接地址：
+https://segmentfault.com/a/1190000011148981
+
+区别：
+得益于Mobx的observable，使用mobx可以做到精准更新
+Redux是用dispatch广播，通过provider 和 connect对比前后差别控制更新粒度

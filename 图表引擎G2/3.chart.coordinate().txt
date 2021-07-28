@@ -1,0 +1,27 @@
+coordinate配置坐标系，感觉仅在极坐标和饼状图（饼状图都不一定）使用，不太常用
+
+1.有三种配置调用方法
+1）对象配置，一个参数
+2）类型+对象配置，两个参数
+3）结合1）和2），感觉和scale配置类似，可参考，不过一般用1）或2）也足够了
+
+2.重要参数：
+2.1 type  类型，默认直角坐标系（rect）
+2.2 cfg  坐标系配置，一般用在极坐标，直角坐标一般都不用配置
+          startAngle：配置起始弧度
+          endAngle：配置结束弧度
+          radius：配置极坐标半径，范围0-1
+          innerRadius：配置极坐标内半径，范围0-1
+2.3 actions  坐标系变换操作，配置项是个数组
+          ['rotate', number]：配置旋转度数，number是弧度
+          ['reflect', 'x' | 'y']：沿x方向镜像或沿y方向映射
+          ['scale', number, number]：沿x, y方向缩放比例
+          ['transpose']：x, y轴置换
+actions除了配置，还可以以方法的形式调用：
+  chart
+      .coordinate() // 创建坐标系
+      .transpose() // x, y轴置换
+      .scale() // 沿x, y轴缩放比例1， 1
+      .rotate(Math.PI * 0.4) // 旋转Math.PI * 0.4
+      .reflect('x') // 沿x轴方向镜像
+          

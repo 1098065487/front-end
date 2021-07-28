@@ -1,0 +1,13 @@
+1.animation-play-state属性配合js
+animation-paly-state属性定义了一个动画是否运行或暂停，running/paused，可以通过js控制css属性值的变化，控制动画的暂停和播放
+
+2.hover伪类实现，配合animation-play-state
+通过hover事件控制，添加hover伪类属性，控制动画的暂停或运行
+
+3.checked伪类实现，checkbox中的label for
+通过radio标签的checked伪类，控制向动画样式中添加动画控制的css属性，但切换选择时，控制暂停或者播放
+
+类似3的操作，可以用radio代替checkbox，用target伪类选择器实现类似效果
+
+
+针对2，3中，动画节点的css选择器和控制的节点选择器完全没有关系的情况，可以使用~选择器符号，表示完全不相关但是影响到后面的选择器样式，如：button::hover ~ animation {}

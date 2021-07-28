@@ -1,0 +1,48 @@
+1.将react生命周期分三个阶段，按阶段解读：
+1）挂载阶段
+2）更新阶段
+3）卸载阶段
+
+2.挂载：（可以理解为组件初始化，将组件插入dom，仅发生一次）
+constructor -> getDerivedStateFromProps -> render -> componentDidMount
+1）constructor，组件构造函数，第一个执行，初始化state对象
+要么不写，会有默认构造函数生成，写，就得在第一行执行super(props)，不然拿不到this对象
+
+2）static getDerivedStateFromProps(nextProps, nextState)
+接受新的props和state做参数，返回一个对象来更新state，如不更新，返回null
+一般用作受控组件更新props，将组件上一步props缓存进state，每次在方法中对比state中的preprops和参数nextprops做对比，如未更新，返回null，如果更新，返回新的preprops做state的对象，以便可以继续对比，至于使用props，一般缓存到states使用，这样可以进行判断使用，不用每次都对子受控组件重新渲染（直接使用props，且不完全受控的话，只能用state）
+
+3）render
+可以返回原生dom(如div)，React组件，Fragment(片段)，Portals(插槽)，字符串和数字(被渲染成text节点)，boolean和null(无结果的渲染)
+render是纯函数，仅返回要渲染的结果，不做任何逻辑处理，不在render中setState
+
+4）componentDidMount
+组件在第一次render过后，已经挂载到了dom上，可以获取到dom并进行操作，可以将节点操作，服务器请求，订阅都写在这个里面，但是订阅需要在componentWillUnmount中取消订阅
+这里关注一下，在componentDidMount中调用setState会触发一次额外的渲染（re-render）
+
+3.更新：（props变化，setState，forceUpdate触发，可能多次）
+getDerivedStateFromProps -> shouldComponentUpdate -> render -> getSnapshotBeforeUpdate -> componentDidUpdate
+1）getDerivedStateFromProps，装载阶段已经介绍过用法，在更新阶段，需要注意他的触发：
+props变化，setState，forceUpdate(也就是说更新都会走这个方法)
+
+2）shouldComponentUpdate(nextProps, nextState)
+和getDerivedStateFromProps一样，接受新的props和state作为参数，但是返回值是boolean类型，true表示重新渲染，false表示不会重新渲染
+需要注意一下他的触发时机：当调用forceUpdate时，并不会触发该方法
+官方的建议是：使用PureComponent来减少渲染次数而不是手动编写shouldComponentUpdate
+
+其实综合来说，针对受控组件，使用的更多的还是getDerivedStateFromProps，shouldComponentUpdate在某些场景下不触发，使用shouldComponentUpdate的场景，更多的，在父子组件中，子组件即使继承的是PureComponent，当props是一个对象时，始终会认为props是变化的，这是可以用shouldComponentUpdate判断下，要不要去re-render，提升性能
+
+3）getSnapshotBeforeUpdate(preProps, preState)
+此方法在render之后，componentDidUpdate之前调用，以之前的props和state作为参数，返回值会作为第三个参数传递给componentDidUpdate，即使没有，也要返回null
+所以，此方法一定要和componentDidUpdate一起使用
+
+4）componentDidUpdate(preProps, preState, snapshot)
+此方法在getSnapshotBeforeUpdate之后调用，三个参数，之前的props，state和snapshot，snapshot时getSnapshotBeforeUpdate中返回的
+此方法内，可以操作dom，发请求，setState，但是需要用if语句控制，不然会导致无线循环
+
+3）和 4）都没有直接使用的经历，导致不明确这两个生命周期的具体作用
+
+4.卸载：（组件被卸载或销毁时触发）
+1）componentWillUnmount
+此方法内，一般进行定时器的消除，取消网络请求，清理无效dom，等垃圾清理工作
+

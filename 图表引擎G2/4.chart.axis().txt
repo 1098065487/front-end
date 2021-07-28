@@ -1,0 +1,24 @@
+axis表示图表的坐标轴
+
+1.传入boolean配置是否显示坐标轴
+view.axis(false);  // 不展示坐标轴
+
+2.针对特定的某条坐标轴进行配置（不似scale可以一次配置完，单条单条配置）
+chart.axis('city', false);  // 不展示city字段的坐标轴
+chart.axis('city', { title: null });  // 隐藏city字段的坐标轴标题 
+
+3.重要配置参数：
+3.1 title 坐标轴标题配置，null不展示，
+	offset 标题距离坐标轴距离
+	autoRotate 是否自动旋转
+3.2 label 坐标轴刻度标签配置
+	offset：label偏移量
+	rotate：文本旋转角度
+	autoRotate：是否自动旋转
+	autoHide：是否自动隐藏
+	autoEllipsis：是否自动省略
+	formatter：格式化函数（最常用，修改刻度标签展示）
+3.2 grid 坐标轴网格线配置，null不展示
+
+
+

@@ -1,0 +1,9 @@
+启动项目时，config文件中都有 const { REACT_APP_ENV } = process.env; 语句，REACT_APP_ENV 即使当前环境的字段，一般没有配置的情况是undefined
+
+1.前端本地环境指向：
+在本地项目根路径下创建.env环境变量文件，里面配置REACT_APP_ENV属性，格式：REACT_APP_ENV=production（环境变量的配置格式），添加配置后，即可在项目中根据REACT_APP_ENV属性，去区分配置要使用的后端环境
+
+2.构建项目环境指向：
+项目构建一般是通过build指令，可以通过在build指令后面添加环境变量配置，让打包文件拥有自定义的环境变量，格式：cross-env REACT_APP_ENV=production umi build，参照的是run: dev指令
+
+以上是当自定义请求时的做法，如果使用项目自带的request请求，也可以用以上的思路去修改proxy代理配置，让根据不同环境走不同代理，实际上，以上的处理思路，正是从项目自带的代理的思路来的

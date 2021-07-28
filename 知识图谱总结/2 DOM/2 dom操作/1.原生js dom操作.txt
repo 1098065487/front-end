@@ -1,0 +1,50 @@
+1.创建节点
+1）document.createElement(tagName)，创建一个tagName的html标签元素
+2）document.createTextNode(data)，创建一个文本节点，内容为data
+3）document.createDocumentFragment()，创建一个空白的文档片段
+文档片段是DocumentFragment对象的引用，是dom节点，但不是主dom树的一部分
+一般作用于dom节点的添加：利用文档片段创建一个临时节点，将需要添加的dom节点先添加到文档片段中，再将文档片段添加到dom树中，这样做有一个好处，文档片段存在于内存，将dom节点添加到文档片段不会引起回流（reflow），有性能优化的效果
+
+2.通过节点关系获取节点
+1）Node.parentNode，返回Node节点的父节点
+2）Node.parentElement，返回Node节点的父节点，若不存在，返回null
+3）Node.childNodes，返回Node节点的子节点集合，包含文本节点
+4）Node.children，返回Node节点的子节点集合，只包含元素节点
+5）Node.nextSibling，返回Node节点的下一个兄弟节点，包括文本节点
+6）Node.nextElementSibling，返回Node节点的下一个兄弟元素节点
+7）Node.previousSibling，返回Node节点的上一个兄弟节点，包括文本节点
+8）Node.previusElementSibling，返回Node节点的上一个兄弟元素节点
+9）Node.firstChild，返回Node节点的第一个子节点，包括文本节点
+10）Node.firstElementChild，返回Node节点的第一个元素节点
+11）Node.lastChild，返回Node节点的最后一个子节点，包括文本节点
+12）Node.lastElementChild，返回Node节点的最后一个元素节点
+
+3.节点操作
+1）Node.appendChild()，将节点添加到Node节点的子节点列表末尾，返回插入的节点
+2）Node.removeChild()，将Node的一个子节点从dom中移除，返回移除的节点，移除后仍在内存中，可操作
+3）Node.insertBefore()，在Node节点的某个子节点之前插入一个节点，返回插入的节点，两个参数，第一个参数为要插入的节点，第二个为位置基准节点，可将基准节点改为elem.nextElementSibling，实现类似insertAfter()功能，在子节点后插入节点
+4）Node.replaceChild()，将Node节点的某个子节点用新节点替换，返回旧节点，两个参数，第一个为新节点，第二个为要替换的旧节点
+
+4.节点选择
+1）document.querySelector(selectors)，根据selectors获取节点，selectors是一个或多个选择器
+2）document.querySelectorAll(selectors)，和1）类似，但是是获取节点列表
+3）document.getElementById()，根据元素ID获取元素节点
+4）document.getElementsByTagName()，根据标签获取节点列表
+5）document.getElementsByName()，根据元素name属性获取节点列表
+6）document.getElementsByClassName()，根据类名获取元素节点列表
+
+5.属性操作
+1）element.setAttribute(name, value)，给元素设定属性值，如存在则更新
+2）element.removeAttribute(attrName)，删除元素的某个属性值
+3）element.getAttribute(attrName)，获取元素上某个属性值，不存在返回null或''
+4）element.hasAttribute(attrName)，判断元素上是否有某个属性值
+
+6.DOM事件
+1）element.addEventListener(type, listener, [options])，给元素添加监听事件type，并设置响应事件listener，第三个参数可选，选择事件冒泡还是事件捕获，默认false，冒泡
+2）element.removeEventListener(type, listener, [options])，移除元素上监听事件type
+3）document.createEvent()，创建自定义事件，随后必须用init初始化
+4）element.dispatchEvent(event)，对指定元素触发一个事件
+
+7.元素样式尺寸
+1）window.getComputedStyle(elem)，获取elem所有应用的css属性值
+2）elem.getBoundingClientRect()，返回elem元素大小及相对于视口的位置（包括left, right, top, bottom, width, height, x, y的对象）

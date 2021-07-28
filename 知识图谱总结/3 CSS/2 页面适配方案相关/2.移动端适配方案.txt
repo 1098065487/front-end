@@ -1,0 +1,27 @@
+由1px问题的解决，引出移动端的适配方案，这里其实可以拓展到pc端，但是有瑕疵，因为无论是flexible（rem）还是vw，都是基于设备宽度去做的适配，pc的屏幕宽度跨度太大，会导致设计按照某一尺寸的设计，在缩放后，字体过大或者过小的情况，而移动端基本屏幕跨度不大，适配方案更好
+
+1.flexible方案（rem）
+无论是引用flexible.js还是自己写js去做计算，这种适配方案的思路都是一样的，即通过js判断设备，来修改html根目录的font-size大小，从而可以使用rem作为全局页面的度量单位，并通过js监听屏幕resize，来实现不同设备下的页面自适应：
+var fun = function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                if (clientWidth > 575.98) {
+                    docEl.style.fontSize = 20 * (clientWidth / 1920) + 'px';
+                } else {
+                    docEl.style.fontSize = 20 * (clientWidth / 375) + 'px';
+                }
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    };
+    fun(document, window);
+
+2.使用vw方案
+vw的好处，相比rem，不需要js即可使用，目前浏览器已支持
+vw的缺点，项目rem，计算复杂度更高，rem按上面的js，可以以实际像素值除以20得到rem，但是vw只能按设计稿，以实际像素值除以（屏幕宽除以100）得到
+
+两种方案都有尺寸换算的插件可用，但是都没用过

@@ -1,0 +1,10 @@
+以前使用instanceof都是记，判断某个对象否是类的实例，这其实是java中的用法，js也可以这么用，但是有更好（官方）的理解
+
+instanceof运算符用于检测构造函数的prototype属性是否存在在某个实例对象的原型链上
+
+a instanceof B
+即检查a的__proto__链上是否有B.prototype，这样不单单是类和实例，父类往上也是返回true
+
+和instanceof一样用法，但是判断方向相反的，isPrototypeOf()
+判断某个对象是否存在于另一个对象的原型链上
+B.prototype.isPrototypeOf(a)      // true

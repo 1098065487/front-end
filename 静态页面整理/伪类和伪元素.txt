@@ -1,0 +1,4 @@
+地址：http://www.alloyteam.com/2016/05/summary-of-pseudo-classes-and-pseudo-elements/
+
+伪类：使用单冒号 : 后接选择，表示选中某一块内容或莫一块内容某个状态，操作dom树已有元素
+伪元素：使用双冒号 ::后接选择，表示创建了某块部分元素

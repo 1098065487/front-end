@@ -1,0 +1,12 @@
+传统Ajax存在不便之处，目前官方有浏览器普遍适用的fetch方法去进行网络请求
+
+fetch 提供了一个获取资源的接口，主要提供了Request和Response两个对象的通用定义
+
+fetch必须接受url这一参数，无论请求是否成功，都会返回一个Promise对象
+
+目前fetch并不支持XHR类似的请求未完成时的中止操作，但是已经开始在准备添加支持
+（AbortController和AbortSignal接口）
+
+
+总结：
+Fetch的核心在于对HTTP接口的抽象，包括Request，Response，Headers，Body和fetch()方法，并且Fetch返回的是一个Promise对象，方便处理异步请求。

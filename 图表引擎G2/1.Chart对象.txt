@@ -1,0 +1,8 @@
+图表的初始化，由创建图表对象开始
+
+1.重要属性：
+1）container  绑定容器，一般传入DOM id，传入dom实例也可以
+2）autoFit  默认false，表示不自适应容器宽高，根据设置width和height生成容器，设为true，仅	  自定义height生效，宽度会获取容器宽度
+3）width和height  自定义宽高
+4）padding  自定义容器padding
+5）renderer  自定义图表渲染引擎，默认canvas，实际在配置svg后，某些联动事件会消失，慎用

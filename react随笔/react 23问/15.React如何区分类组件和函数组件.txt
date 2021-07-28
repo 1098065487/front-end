@@ -1,0 +1,17 @@
+先说结论：
+https://overreacted.io/zh-hans/how-does-react-tell-a-class-from-a-function/
+
+所有的类组件都会继承React.Component，所以判断组件的原型链上是否存在React.Component就可以了（一般用instanceof判断是否是某个对象的实例）
+
+ClassComponent.prototype instanceof React.Component    // true即为类组件
+这里没法直接用实例去判断，但是实例的__proto__属性指向其构造函数的prototype，也就可以用上面的方法来判断一个类是否拓展了另一个类
+
+这种方式是开发者用来判断组件是函数组件还是类组件的方式，但实际上react内部并不这么做
+
+
+解析：
+函数组件和类组件效果是一样的，但是react内部使用却是不一样的（函数组件直接调用即可获取返回的组件结构，类组件需要先new，创建类组件的实例，再由实例调用render方法获取返回的组件结构），所以react需要判断出组件的类型，区别调用
+
+react内部考虑了更特殊的情况，当页面有多个react副本，检查组件继承来自另一个react副本的React.Component时，用instanceof就无效了
+
+React为基类增加了一个特别标记，isReactComponent，并把这个标记附在React.Component.prototype上，当存在值时，便可判断为类组件（react内部设置为{}空对象）

@@ -1,0 +1,11 @@
+简单来说，在react内部，hooks是以链表的形式存在组件的memoizeState属性中，每次更新操作时，链表会按顺序执行hooks更新操作并添加记录（记录上一步操作），如果写在判断里，会导致整个组件的hooks更新可能出现偏移（没有通过判断执行），从而导致异常
+
+详细解析：https://juejin.cn/post/6867745889184972814
+
+官网说明：
+hook规则：
+1）只在最顶层使用hook，不在循环，条件或嵌套函数中调用hook
+react是根据hook的调用顺序对hook操作进行匹配的，如useState，如果在条件判断中使用hook，在没通过判断不执行该hook的情况下，会导致该hook后续所有hook操作匹配的都是前一个hook
+
+2）只在react函数中调用hook，不在普通javascript函数中调用hook
+只在两种情况下可以使用hook，react函数组件内 和 自定义hook中

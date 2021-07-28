@@ -1,0 +1,16 @@
+1.Promise对象：一个异步操作的最终完成状态和结果值。一般是由函数（resovle, reject）返回，                        可以在Promise对象上绑定回调函数，这样就无需一开始在函数上传入回调函数做                        参数了
+    传统写法：createAudioFileAsync(audioSettings, successCallback, failureCallback)
+    使用Promise：const promise = createAudioFileAsync(audioSettings); 
+                          promise.then(successCallback, failureCallback);
+
+2.链式调用：
+连续异步操作，上一个操作成功后，带着返回的结果去执行下一个操作，可以通过Promise链来实现
+const promise = doSomething();
+const promise2 = promise.then(successCallback, failureCallback);
+    then()会返回一个和原来不同的Promise对象
+
+使用传统的回调方式去连续处理异步操作，会导致经典的回调地狱（函数作为参数层层嵌套），而使用Promise链式调用，可以很直观的按顺序then()函数调用。
+
+3.Promise构造：
+    包装一个支持promise的函数，new Promise(function(resolve, reject) {...})
+resolve和reject函数被调用时，分别将promise的状态改为fulfilled(完成)或rejected(失败)。

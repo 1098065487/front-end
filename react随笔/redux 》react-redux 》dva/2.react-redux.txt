@@ -1,0 +1,11 @@
+1.redux中触发action去改变state，一般通过store.dispatch()去调用dispatch.
+
+2.在react项目中，我们使用react-redux提供的connect()来更便捷的实现，使用redux还可以直接发出dispatch()。
+
+  便捷体现在：
+      比如说当数据筛选时，存储的state值不会变化，但是要求根据选择状态发生筛选，此时定义一个选择状态值，在页面通过connect监听到状态值变化直接处理state即可，否则需要定义另一个数据值去存储筛选后的数据，对比来看，仅添加一个选择状态值更优雅。
+
+  connect的好处：
+      使用后，可以绑定state到页面的props，当state变动，可以直接显示到页面，使用connect，可以对state做出处理而不影响state，不使用，则是直接使用state（state只读）
+
+3.connect主要配置了将state绑定到页面的props，也就是配置mapStateToProps，转发dispatch倒是没有需要配置（mapDispatchToProps），因为不配置的话，在页面可以获取props中的dispatch，可以直接在页面转发出请求，这样灵活度更大点。（其实在mapDispatchToProps返回值中定义好action，和在页面中自己定义再转发一样，只是位置不同）

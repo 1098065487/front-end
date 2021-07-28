@@ -1,0 +1,22 @@
+主要写用法：
+1.创建Context对象，为第一步，为后续使用创造前提条件
+const MyContext = React.createContext(xxxx);
+1）创建Context对象为前提，使用Context的前提
+2）默认值仅当未匹配到当前树中的Provider时，才生效，指定Provider的value为undefined时，也不生效
+
+2.使用Context对象
+Class.contextType = MyContext  或者在组件中：static contextType = MyContext
+1）仅当在组件类外或类内部声明使用Context对象后，才可以在组件类中通过this.context访问到最近的Provider的value值或者默认值
+2）这种情况下，只能订阅到单一的context，想要多个，使用Consumer
+
+3.也可以使用Consumer消费value，将共享value传递给组件
+<MyContext.Consumer>
+  {value => <组件 postValue={value} />}
+</MyContext.Consumer>
+可以用函数嵌套的形式，来订阅多个context
+但其实如果有多个context的需求时，往往可以组合起来，还是使用一个context
+
+4.Provider提供共享数据
+<MyContext.Provider value={xxx}> XXXX </MyContext.Provider>
+value绑定值的变化，会引起内部消费组件的重新渲染，特别是当value是对象时，不管有没有变化，只要Provider父组件重新渲染了，内部组件都会重新渲染，因为对象地址变了，算是新的对象
+解决办法：将value对象提升到父组件的state中，因为react的state做了优化，对象在渲染时不会识别为变化

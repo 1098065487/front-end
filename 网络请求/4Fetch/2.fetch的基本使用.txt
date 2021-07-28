@@ -1,0 +1,42 @@
+1.fetch()方法发出请求，得到一个Promise对象
+fetch('http://example.com/movies.json')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    console.log(myJson);
+  });
+fetch()发出请求很简单，这里主要关注下fetch方法的参数，第一个是必选，url，第二个是可选参数，控制不同配置的对象，包括headers配置和参数配置（具体描述单独开一页写）
+
+2.请求的结果
+由于fetch()返回一个Promise对象，Promise会有两种情况，1.任务正确完成得到返回结果，resolve，2.任务失败返回失败原因，rejected
+而权限或404这种并不是任务失败，也是走的Promise resolve，需要根据Response.ok是否为true来判断是否拿到正确返回结果再去处理。
+fetch('flowers.jpg').then(function(response) {
+  if(response.ok) {
+    return response.blob();
+  }
+  throw new Error('Network response was not ok.');
+}).then(function(myBlob) { 
+  var objectURL = URL.createObjectURL(myBlob); 
+  myImage.src = objectURL; 
+}).catch(function(error) {
+  console.log('There has been a problem with your fetch operation: ', error.message);
+});
+
+3.自定义请求对象
+fetch提供了Request对象，这个对象就是fetch的参数类型（fetch请求出去也是发送Request对象的实例），所以可以自己使用Request对象创建实例，并配置好，然后通过fetch()发出就行，这个思路应该就是公司项目使用antd pro v5内封装的umi-request的实现思路。
+var myHeaders = new Headers();
+
+var myInit = { method: 'GET',
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+
+var myRequest = new Request('flowers.jpg', myInit);
+
+fetch(myRequest).then(function(response) {
+  return response.blob();
+}).then(function(myBlob) {
+  var objectURL = URL.createObjectURL(myBlob);
+  myImage.src = objectURL;
+});

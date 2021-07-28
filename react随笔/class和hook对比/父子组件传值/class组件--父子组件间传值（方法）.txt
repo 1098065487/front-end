@@ -1,0 +1,31 @@
+1.父传子：
+通过prop获取，子组件直接调用
+
+2.子传父：
+  1.父组件提供方法，在父组件的this上挂载child = ref接收子组件传递过来的this
+  2.子组件可通过props获取父组件传递的这个方法
+class Fu extends Component {
+  onRef = ref => {
+    this.child = ref;
+  }
+
+  click = () => {
+    this.child.test();
+  }
+
+  render () {
+    return <Zi onRef={this.onRef}>
+  }
+}
+  3.子组件将this传递给父组件，一般在生命周期内
+class Zi extends Component {
+  componentDidMount() {
+    this.props.onRef(this);
+  }
+
+  test = () => ();
+}
+  4.父组件有了子组件的this，就可以使用子组件的方法了
+click = () => {
+  this.child.test();
+}

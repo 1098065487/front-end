@@ -1,0 +1,4 @@
+1.在使用类组件的情况下，性能的问题主要体现在shouldComponentUpdate控制render的时机上，最优的情况是，仅在props和state的值发生变动的情况下去re-render，所以官方提供了PureComponent实现简单组件自己处理shouldComponentUpdate的方式，但是复杂情况下的re-render不尽人意，目前项目中普遍采取忽略，默认多次re-render。存在可优化的点。
+
+2.在使用hook函数组件的情况下，其实也有类似问题，识别值的变化去更新函数组件时，Object类型总是识别为变化，从而影响性能，但是hook组件针对此的优化更为优雅，通过Memoization函数，仅在依赖变化的情况下，识别变化，进而更新变化。
+（主要体现在useCallback，useMemo，useReducer，都是优化时使用的高频hook）

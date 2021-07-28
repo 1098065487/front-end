@@ -1,0 +1,12 @@
+先说结论：
+目的是为了防止XSS攻击，Symbol无法被序列化，所以React可以通过有无$$typeof属性判断当前的element对象是从数据库来的还是自己生成的
+如果没有$$typeof属性，react会拒绝处理该元素
+
+解析：
+在react写JSX代码之所以会生成到Dom上，是执行力React.createElement()的缘故，也就是说react内部处理帮你写了dom结构(可以理解成前端HTML)的生成代码
+
+可以理解下，前端编写html节点，并插入dom树，是前端开发的常用手段，这也是前端框架包括jsx的内部转换思路，但是允许这种行为实际是不安全的，或者说外部XSS攻击对于前端来说，是需要考虑的
+
+jsx内部去创建节点并添加dom树本身没有问题，但是针对单个待生成的节点，其props是对象，如果服务器有允许用户存储任意JSON对象的漏洞，这里就可能根据props进行XSS攻击
+
+react从早期就考虑到这个安全性问题（0.14版本），使用Symbol标记每个react元素，即为$$typeof属性，因为Json不支持Symbol类型，所以消除上面的安全漏洞问题。react检查元素element的$$typeof属性，如果不存在或者无效，则react拒绝处理该元素

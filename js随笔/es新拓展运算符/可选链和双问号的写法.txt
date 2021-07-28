@@ -1,0 +1,22 @@
+可选链和双问号的语法属于es新提案，写法更简单，但代码理解可能难一点
+
+1.可选链：
+let street = user.address && user.address.street;
+// 可选链
+let street = user.address?.street;
+当?.前面不为null或undefined，才去取?.后面的内容，短路返回 undefined。
+
+adventurer.someNonExistentMethod?.();
+// expected output: undefined
+还可以与函数调用一起使用，如果给定的函数不存在，则返回 undefined
+
+2.双问号：
+双问号??和||操作符类似，但是比||更合理
+> undefined ?? 'default'      'default'
+> null ?? 'default'                'default'
+> false ?? 'default'               false
+> '' ?? 'default'                    ''
+> 0 ?? 'default'                    0
+
+|| 仅在前面为null和undefined情况下才取后面默认值
+?? 更符合期望

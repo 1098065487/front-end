@@ -1,0 +1,54 @@
+传统js，通过构造函数实现类的概念，通过原型链实现继承（属性构造继承，方法原型链继承），ES6开始，直接使用class关键字实现类和继承相关概念。
+TS中的类的概念，比JS（es6）中，主要强化了修饰符，抽象类的概念，同时，类的类型支持，形式上和接口类似，对实例化的对象加类型约束，直接用类去约束即可（类型约束，类可看作自定义类型）
+
+1.ES6提供的类的支持：（TS支持）
+1-1.属性和方法：引入class，使用constructor定义构造函数
+class Animal {
+    public name;
+    constructor(name) {
+        this.name = name;
+    }
+    sayHi() {
+        return `my name is ${this.name}`;
+    }
+}
+1-2.类的继承：使用extends实现继承，子类用super调用父类构造函数和方法
+class Cat extends Animal {
+    constructor(name) {
+        super(name);    // 调用父类构造函数
+    }
+    sayHi() {
+        return 'Now, ' + super.sayHi();    // 调用父类方法
+    }
+}
+1-3.存取器：使用getter和setter，改变属性的赋值和读取行为
+有缺点，es6没有访问修饰符，可以绕过setter直接改变赋值。
+1-4.静态方法：类中static修饰的方法，直接由类来调用，实例对象反而不能调用
+class Animal {
+    static isAnimal(a) {
+        return a instanceof Animal;
+    }
+}
+let e = new Animal('cat');
+Animal.isAnimal(e);    // true
+e.isAnimal(e);    // 会报错
+
+2.ES7中类的提案：（TS也实现了）
+2-1.实例属性：直接定义在类中的属性
+2-2.静态属性：类中用static修饰的属性，由类名直接访问
+
+3.TS对类的额外支持：
+3-1.访问修饰符的支持（public, protected, private）:
+添加访问修饰符的支持，完美解决了即使es6提供存取器，仍可以绕过setter直接改变属性值的问题，这也使得ts的严谨性更由于js，值得一提的，虽然ts支持访问修饰符，在编译后，得到的js代码还是没有访问修饰符控制的，但是ts控制好了，保证不报错，得到的js也就是不报错的，全用存取器处理的，不会存在问题。
+1）属性和方法，用privat修饰的，在子类中不允许访问（存取器配合使用才有意义，存取器必须是        public修饰），用protected修饰，则允许访问。
+2）构造函数，用private修饰的，类不允许被继承或者实例化，用protected修饰，只允许被继承。
+
+3-2.抽象类：abstract修饰的类和方法被称为抽象类和抽象方法
+抽象类不能被实例化，只能被继承，且在继承时，抽象类中的所有抽象方法必须被子类实现
+
+3-3.参数属性：修饰符和readonly可以直接使用在构造函数参数中
+效果等同于  在类中定义好属性，同时给属性赋值（注意不仅是定义属性，还包括赋值）
+
+4.类的类型：ts的类型支持
+类内部属性和方法直接用类型约束
+外部类的实例，用类做类型约束，此时类看作自定义类型（和接口类似）

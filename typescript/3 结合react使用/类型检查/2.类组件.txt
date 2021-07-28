@@ -1,0 +1,15 @@
+1.类组件的实现，一般多是通过继承Component或PureComponent的，相应的，ts环境下，添加类型约束，主要是泛型，约束props和state的形状（即泛型接口）
+export interface CountProps {    // props的声明一般导出
+    defaultCount: number;    // 可选props，不需要?修饰（但一般还是建议用?:修饰可选属性的）
+}
+interface State {    // state状态，不需要暴露
+    count: number;
+}
+class Counter extends React.Component<CountProps, State> { ... };
+
+2.typescript3.0开始对defaultProps支持推断，在defaultProps中定义的props可以不需要?
+上面代码中defaultCount虽然是可选props，但是没用 ?: ，因为在类中，有：
+public static defaultProps = {
+    defaultCount: 0;
+}
+出现在defaultProps中的属性，都是可选的，但这样并不优雅，还是建议使用 ?: ，比较明确

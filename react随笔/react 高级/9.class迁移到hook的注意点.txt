@@ -1,0 +1,20 @@
+1.class组件生命周期函数在hook中的对应处理：
+1）constructor，在class组件中主要承接props和设置初始化state，在hook组件中，直接使用             传入的参数props，使用useState来初始化state
+2）getDerivedStateFromProps，在class组件中，根据props的变化，改变state，进而重新渲染页             面，在hook组件中，直接根据props变化来处理state变化，更新页面（也就是在渲染函数               组件过程中，setState，会立即退出第一次渲染，并用更新后的state重新渲染），针对避                免不必要的渲染，可以将hook组件使用React.memo包裹，避免不必要的渲染
+3）shouldComponentUpdate，在class组件中，判断组件是否渲染更新，在hook一般借助于              React.memo包裹，避免不必要的渲染
+4）render，hook组件本身做的就是class render的主体
+5）componentDidMount，componentDidUpdate，componentWillUnmount，在hook组件中               一般使用useEffect组合起来
+6）getSnapshotBeforeUpdate，componentDidCatch，getDerivedStateFromError，目前               hook组件还不支持对应方法，会尽快添加
+
+
+2.useEffect的依赖，一般会将函数调用移入到effect内部，而不是将函数加入到依赖中去，针对某些特殊情况下无法将函数移入到effect内部的情况：
+1）将函数移入到组件外，不依赖组件的props及state
+2）纯计算的函数，在effect外部调用，但是要依赖他的返回值
+3）更多情况下，将函数加入依赖中去，但是使用useCallback包裹，避免每次都会触发
+
+3.常用其他hook函数说明：
+1）useCallback，当希望函数能根据依赖自主触发，可以使用useCallback包裹，返回一个     memoized回调函数
+2）useMemo，与useCallback不同，返回一个memoized值，其他相似，使用useMemo拿到的是     值，使用useCallback拿到的是函数本身
+3）memo函数并不是hook函数的一种，他对于class组件也是可以使用的，其作用和useMemo类     似，返回一个memoized组件，根据props和state的变化而决定渲染
+4）useRef，useRef创建的对象，会比class组件中的ref更加有用，本质上，useRef创建了一个类似     于class中实例的对象字段，且会在每次渲染时，都会访问同样一个ref，这个特性可以做的更多
+5）useImperativeHandle，绑定父组件传入的ref，自定义暴露给父组件的实例值，包括值和方法

@@ -1,0 +1,17 @@
+dispaly: none;  和  visibility: hidden;
+
+1.是否占据空间
+display: none;不占据空间，渲染时相当于不存在，
+visibility: hidden;则仍然占据元素空间
+
+2.是否渲染
+display: none;由于不占据空间，切换时会触发reflow（重排），进行渲染，理解为结构上隐藏
+visibility: hidden;则一直占据空间，只会触发repaint（重绘），不进行渲染，理解为样式上隐藏
+
+3.是否是继承属性
+display：不是继承属性，使用display: none;元素和子元素都会消失
+visibility：是继承属性，父元素hidden，子元素visible，则子元素不继承，会显示出来
+
+4.读屏器是否读取
+display: none;不会被读屏器读取元素内容
+visibility: hidden;会被读屏器读取元素内容
