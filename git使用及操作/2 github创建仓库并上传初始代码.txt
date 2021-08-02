@@ -14,3 +14,8 @@ git add . （点表示全部检查，也可以指定文件）
 git commit -m 'init' （init是初次提交备注）
 7）将提交的代码推送到当前分支
 git push origin master
+
+至此，完成版本库代码初始化操作
+
+其实，从理解上，将1）2）3）简化会更简单，直接clone初始化项目到本地，再进行4）5）6）7），同样可完成初始版本代码初始化
+git clone git@github.com:109806...（项目的ssh地址）

@@ -1,0 +1,28 @@
+1.绝大多数时候，开发仅需要三个指令：
+    1）git add . （或者是git add --all），将当前所有代码变动添加到暂存区
+    2）git commit -m '备注'，将暂存区代码提交到本地仓库
+    3）git push origin master，将本地代码变动推送到远程分支master
+
+2.其他常用git命令：
+1）git init，本地项目中初始化git，操作后可使用git命令（克隆项目已包含）
+
+2）git remote -v，查看当前远程仓库（remote英文就是远程的意思）
+3）git remote add origin [url]，给本地仓库关联远程仓库
+4）git remote set-url origin [url]，修改关联的远程仓库地址
+
+5）git clone [url]，克隆远程仓库的代码到本地（需要有权限才能推送）
+
+6）git branch，列举出本地所有分支
+7）git branch [bra]，创建新的分支bra
+8）git checkout [bra]，切换分支到bra
+9）git checkout -b [bra]，创建新分支bra并立即切换
+
+10）git merge [branch]，将branch分支合并到当前分支（一般在操作前，checkout到当前分支）
+
+11）git pull origin [branch]，拉取branch分支上最新的代码
+
+12）git status，查看文件更改
+13）git diff --stat，查看详细文件更改
+
+是我看过的总结最好的了，地址：
+https://gist.github.com/baymaxium/08d4ab3663d36e3911020382762975a3
