@@ -1,0 +1,2 @@
+1.react 在清理dom树时，同名key的node，只会清理一个
+在使用antd Table组件，同一个table切换展示数据时发现该问题

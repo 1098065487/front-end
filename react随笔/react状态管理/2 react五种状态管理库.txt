@@ -1,0 +1,31 @@
+1.recoil，（npm install recoil）
+1）使用RecoilRoot作为根组件包裹，在其中上下文可以使用状态值
+2）atom()创建一个recoil state，一般是初始值，
+3）selector()作为操作或变化recoil state的函数，返回值根据get或set方法只读或可写，一般用作操作state比如筛选（可写情况未深入）
+4）前三步创造了上下文和状态值，使用useRecoilState类似于useState给被包裹的子组件创建状态
+5）使用useRecoilValue获取给定的recoil state值，没有setter
+给的案例用到以上的API，并且可以结合react自带的hook一起使用，用法也和贴合hooks，比较简单直观
+
+2.mobx，（npm install mobx mobx-react-lite）
+案例中使用了最新的API，makeAutoObservable，会自动为属性加上包装函数，如会将被调用在其中的对象上的方法添加action修饰，针对案例函数组件的情况，使用mobx-react-lite包，更小。
+1）使用makeAutoObservable订阅数据源，属性自带修饰（比如计算属性），方法自带action修饰2）使用observer订阅状态变化更新到视图
+属于粗略了解，详细信息需要看文档重新学习
+
+3.redux，（npm install @reduxjs/toolkit react-redux）
+1）根据action创建reducer，可以dispatch触发action，匹配到配置的reducer（createReducer）
+2）组合所有的reducer，注意配置中key在state中会使用（combineReducers）
+3）将组合的reducer配置进store，store可以create，但更灵活的是配置（configureStore）
+4）组件外以Provider包裹住组件，配置上store，即可使用redux
+redux的概念，不得不说三块，action，reducer，store，数据存储在store中，理解为state集，通过dispatch action触发数据变动，action会匹配上reducer中的配置，进行变动操作
+
+实际在使用中，要以Provider组件包裹使用，其上配置好store，一般是configureStore的结果，一个组件可以使用多个reducer，使用时在配置中combineReducers组合起来，每个reducer都是createReducer创建的，里面包含state和操作state的action具体方法，组合时，reducer的key，在使用时直接使用
+
+4.xstate，（npm install xstate @xstate/react）
+案例中给出的写法和官网上不太一样，xstate的思路既不同于redux的触发式，也不同于mobx的监听式，更不用说recoil的类useState使用了，整体上不太好理解，也未深入了
+1）使用xstate中的Machine方法订阅数据源，其中包括数据源变更方法的监听
+2）使用xstate中的interpret订阅创建的machine开始监听，得到service
+3）在service中可以获取state数据源及send方法，通过send方法触发数据变更监听
+
+总结：针对这四种状态管理库（还有一种Context是react自带的，不做过多解读了），感觉可以使用下去的应该就两种，redux和mobx：
+1）一种是用的比较多的redux，这也是我自己使用ant-design项目dva的演变形式，通过action state reducer，将数据和数据变更方法组合成reducer，dispatch action匹配上reducer中的action，从而变更数据，从而重新渲染组件，但是在ant design 5以后，全面使用react hooks，少量数据的使用基本useState和Context的组合都可以解决了，没有继续使用dva了
+2）mobx则是一种很容易理解的状态管理方式，订阅数据源，随后在组件上添加监听，则组件内使用的数据源在变动时，自动反应到组件上

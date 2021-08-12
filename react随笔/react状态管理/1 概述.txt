@@ -1,0 +1,26 @@
+状态是指记录应用状态的数据，这种数据的存储和变更（当然包括变更的重新渲染），即为所谓的状态管理
+
+数据存储：
+1）将变量保存在本地组件状态中（hooks的useState或useReducer，类中的state和setState）
+2）将数据保存在存储中，使用第三方库，如redux，mobx，recoil等
+3）甚至保存在全局的窗口对象上（window）
+
+数据更新和重新渲染：
+首先说明react并不是反应式的框架，需要告诉它需要去做变化的事
+1）使用useState，useReducer，setState，当调用setter函数时，会重新渲染（react内部实现）
+2）使用第三方状态管理库，状态变化时，存储会告诉react去重新渲染（第三方库内部实现）
+3）使用window对象保存数据，需要自己告诉react状态变化后去更新
+
+状态管理的逐级深入：
+1）少量的组件状态管理，使用useState就很不错，通过多个useState调用即可
+
+当状态数量更多，尤其是状态间还相互依赖，此时需要一个合适的状态机来管理、
+
+2）比useState更进一步的是useReducer，类似于useState的调用，但是useReducer更多的管理一个多值的对象（state和action的组合，不同action带来不同state变化，但仍是同一个state对象）
+
+除了前面的两个状态管理，还有一种情况是使用react的痛点，prop drilling，组件嵌套时，特别是多层嵌套，手动的prop drilling在使用时极为麻烦，此时react原生支持的Context可以解决部分
+
+3）Context API是内置在react中的，hooks中亦有useContext
+
+但是Context对性能的影响限制了其用法：当Provider的值变化时，每个调用useContext的组件都会重新渲染，当这一数量偏大时，对性能影响几乎就是灾难，这里可以在context中存储小块数据或拆分成多个context，更多的会考虑使用第三方库
+
