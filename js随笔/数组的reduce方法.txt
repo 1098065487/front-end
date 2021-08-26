@@ -1,0 +1,54 @@
+一直对于数组的reduce()方法不甚理解，直到看到redux中关于reducer原理的解释，开始理解
+
+数组的reduce方法，对数组中的每一个元素执行reducer函数的调用，得到单一的输出
+可以有两个参数，第一个是处理元素的reducer函数，第二个可选，为默认参数
+存在第二个参数时，其为reducer中的第一次执行accumulator参数，不存在，则数组第一位补上，对应的currentValue参数会变为数组第二项
+
+关于reducer函数：
+回调函数reducer会在每个数组元素上执行，返回值是累加结果，并作为下一次调用的参数，有4个参数：
+accumulator（累加器），每轮上次回调函数的返回值
+currentValue（当前值），执行的当前数组元素
+currentIndex（当前索引），执行的当前数组元素下标，可选
+sourceArray（源数组），可选
+
+reduce()方法的使用场景：
+1.对数组所有值求和
+const arr = [1, 2, 3, 4];
+const total = arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+2.对对象数组中数组项求和
+const objArr = [
+  { subj: '数学', marks: '99' },
+  { subj: '语文', marks: '98' },
+  { subj: '英语', marks: '100' }
+]
+const total = objArr.reduce((accumulator, current) => accumulator + current.marks, 0);
+
+3.展平数组（将多维数组展平为一维数组）
+const twoDArr = [ [1, 2], [3, 4], [5, 6] ];
+const oneDArr = twoDArr.reduce((accumulator, current) => accumulator.concact(current));
+
+4.按属性对数组分组处理
+const result = [
+  {subject: '物理', marks: 41},
+  {subject: '化学', marks: 59},
+  {subject: '高等数学', marks: 36},
+  {subject: '应用数学', marks: 90},
+  {subject: '英语', marks: 64},
+];
+let initial = { pass: [], fail: [] };
+const groupedResult = result.reduce((accum, current) => {
+  current.marks >= 60 ? initial.pass.push(current) : initial.fail.push(current);
+  renturn initial;
+}, initial)
+
+5.删除数组中的重复项
+const dArr = [1, 2, 2, 3, 3, 4, 4, 5];
+const arr = dArr.reduce((accum, current) => {
+  if(!accum.includes(current)) {
+    accum.push(current);
+  }
+  return accum;
+}, [])
+
+

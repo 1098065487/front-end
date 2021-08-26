@@ -1,0 +1,75 @@
+一切的起源当然是前端的状态管理，包括状态数据的存储和变更以及变更在页面的重新渲染
+
+1.store模式
+最简单的处理状态管理的问题，是将状态提取出来管理起来，于是诞生了store模式，即将状态数据和处理状态数据的方法封装进store对象中
+store对象中，state对象管理着所有的状态数据，同时还封装着修改state的方法actions
+问题：
+store内state对象的修改只能人为规定仅通过其中的action改变，这样才能记录到所有state的变更，对于保存快照，回滚，时光旅行操作才更便捷实现，这样做，其实也就是Flux架构的思想了
+
+2.Flux
+Flux严格来说其实是一种思想，很多框架都根据他来做对应的框架实现（甚至可以这么理解：vuex是vue状态管理框架，react-redux+redux是react状态管理框架，他们和Flux思想一致）
+Flux包括4个概念：view, action, dispatcher, store，view作为应用的视图，可以在视图界面或者其他地方触发action去变更数据，dispatcher接受所有的action，并转发到store，调用store中的方法变更store中的状态数据，并且引起view的重新渲染
+Flux的最大特点是单向数据流动的
+
+3.redux
+Flux在应用中可能有多个store，多个store之间也可能有依赖关系，在使用时，更多会用redux
+redux包括3个概念：store，action，reducer
+1）store中存储着整个应用的数据，其中的state不可修改，只能每次返回一个新的state，允许     store.subscribe设置监听函数，一旦state变化，执行，比如react中订阅render和setState
+2）action是界面发出的通知，告诉store state去改变，type为action名称，payload为参数
+3）reducer是redux中处理action的纯函数，不同于Flux，redux利用store.dispatch()发起action事     件，利用reducer处理，并返回一个新的state，大型redux项目，state庞大，reducer庞大，可     以拆分reducer后，通过combineReducers()合并成一个根reducer
+流程：（我的理解，监听部分框架已经做了）
+1）用户通过界面发出action
+store.dispatch(action);
+2）store自动调用reducer，并传入两个参数，state和action，返回新的state
+let nextState = xxxReducer(previousState, action);
+3）state发生变化，store调用监听函数
+store.subscribe(listener);
+4）listener通过store.getState()得到当前状态，可以选择触发重新渲染界面
+function listener() {
+    let newState = store.getState();
+    component.setState(newState);
+}
+
+4.对比redux和Flux：
+Flux中store各自独立，每个store只对对应view负责，更新只通知对应的view，redux中各reducer由combine的根reducer统一管理，每个变化都会经过这个根reducer，总结就是：
+
+1）不同：redux有三大原则：1》单一数据源，对应Flux数据源可以是多个
+                                           2》state只读，对应Flux的 state可以修改
+                                           3》redux使用纯函数执行修改，对应Flux则没有此要求
+2）相同：redux和Flux都是单向数据流
+
+5.redux中间件：
+实际在项目中，必然存在action同步和异步两种情况，这对于state的改变处理和重新渲染的时机是不一样的：
+1）同步表现为action发出以后，reducer立刻算出state，重新返回
+2）异步表现为action发出以后，过一段时间在执行reducer，然后算出state并重新返回
+
+为了让reducer在异步操作结束后自动执行，redux引入中间件middleware的概念，注意异步操作是加在view发送action的时候，也就是在dispatch方法上包裹一层操作
+
+处理异步：关注两个时刻1）发起请求的时刻，2）接收响应的时刻，这两个时刻都会改动state
+1>请求开始，dispatch一个请求开始action，触发state更新为请求状态，view渲染如loading
+2>请求结束，成功则dispatch请求成功的action，隐藏loading，并将数据更新到state
+                    失败则dispatch请求失败的action，隐藏loading，给个失败提示
+这里的中间件可以自己写，也可以选择第三方的，代表性的：redux-thunk，redux-promise
+
+1）redux-thunk：
+针对于请求方法action做封装，包裹dispatch，按照上面处理异步的步骤，借助于异步请求函数（比如promise）处理异步，比较简单直白，很容易理解，但是用户操作代码需要写很多
+2）redux-promise：
+思路还是和redux-thunk一样，封装action，包裹dispatch，但是其异步请求不在手动判断，将异步函数作为payload参数传入封装后的action，在reducer中去根据返回结果处理
+
+6.react-redux
+本质上，redux和Flux其实都是一种思想，并不是框架，redux其实可以支持多种语言的实现，但是因为react函数式思想和单向数据流，和redux很搭，react官方推出react-redux库来配合使用
+react-redux主要解决了redux和UI的关联问题，使用connect方法连接容器组件和UI组件，mapStateToProps把容器组件的state映射到UI组件的props，mapDispatchToProps把UI组件的事件映射到dispatch方法（类组件使用装饰器，函数组件仍可使用connect方法）
+
+7.redux-saga
+redux-saga也是一种处理redux异步的中间件，但是他采用不一样的思路，类似于es6 generator，redux-saga将异步写法转成同步写法（yield call，异步；yield put，同步）
+
+8.dva
+dva首先是一个基于redux和redux-saga的数据流方案，同时额外内置了react-router和fetch， 就成为了一个轻量级的应用框架
+这是最开始erp项目的实现，也就是ant-design3项目框架的基础（umi作为整合项目并打包），model整合了state和reducers，具体的参考erp项目能看出来
+
+9.mobx
+前面的都是单向数据流方案下的状态管理，mobx提供了一种不一样的思路
+mobx背后的哲学认为：任何源自应用状态的东西都应该自动的获得，其实也就是类似于vue这种，view上对数据做了监听，当数据变化，自动被view监听到并作出改变
+
+
+
