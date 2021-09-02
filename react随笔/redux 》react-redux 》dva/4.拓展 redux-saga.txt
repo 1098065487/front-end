@@ -1,3 +1,3 @@
 1.yield call、put：
-    call处理同步，直接调用给定函数
-    put处理异步，dispatch一个action到store
+    call处理异步，直接调用给定函数
+    put处理同步，dispatch一个action到store
