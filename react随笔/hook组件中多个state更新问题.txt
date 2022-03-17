@@ -1,0 +1,15 @@
+在class组件中：
+1.使用setState方法可以同时更新多个state
+2.当state为值，显式赋当前值，会识别出未更改，不重新渲染
+但在hook组件中：
+1.使用useState，一般只针对单个state，当一个操作需要更新多个state值时，会引起useEffect依赖state的多次变化，导致多次渲染，且值未同时更新
+2.假使使用对象包裹多个state解决1的问题，即使显示赋当前值，仍会因为是新的对象，导致重新渲染一次
+
+解决hook问题1的办法：
+1.使用对象包裹多个state，注意，在这种方式下，可以仅针对单个state做更新，使用useState的回调写法：
+useState(preState => ({...preState, state1: newSate1}))，注意回调里面返回的是一个新对象，不然不能被useEffect依赖识别出变化
+
+2.使用useReducer，仅作为更新多个state有点大材小用，会有点类似useState的对象写法：
+初始值设为对象，在reducer内部监听type为update(随意名称也可)，根据旧state和action对象中传入的参数，返回新的state对象，以dispatch()触发reducer
+
+注意：这里可以多多拓展，针对不同的action type，可以对state做多种情况的监听，所以以前使用dva项目时，其中封装的react-redux，就有这种味道在里面，那种情况下，state可能延展到整个项目的state，结合Content组件使用，一个项目的状态管理，思想大概也是这样来的

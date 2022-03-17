@@ -1,0 +1,10 @@
+可以使用数组的splice方法，根据数组下标index，实现数据的插入或删除
+注意，splice() 会改变原始数组
+
+1.删除：
+arr.splice(index, num)
+index为删除开始位置下标，num为删除数据数量，返回值是删除的数据元素
+
+2.插入：
+arr.splice(index, num, 'new1', 'new2', ...)
+index为删除开始位置下标，并在此位置开始插入，num为删除数据数量，为0时仅插入，后面字段可选，插入的数据
