@@ -1,0 +1,76 @@
+function a() {
+    return next => {
+        return action => {
+            console.log('a before', action);
+            console.log(next.toString())
+            const res = next(action);
+            console.log('a after', res);
+        }
+    }
+}
+// 上面箭头函数转成标准函数定义会更清晰，函数层叠，内层函数作为参数传入外层函数，并执行
+// function a1() {
+//     function a2(next) {
+//         function a3(action) {
+//             console.log('a before', action);
+//             const res = next(action);
+//             console.log('a after', res);
+//         }
+//         return a3;
+//     }
+//     return a2;
+// }
+
+function b() {
+    return next => {
+        return action => {
+            console.log('b before', action);
+            console.log(next.toString())
+            const res = next(action);
+            console.log('b after', res);
+            return res;
+        }
+    }
+}
+
+function c() {
+    return next => {
+        return action => {
+            console.log('c before', action);
+            console.log(next.toString())
+            const res = next(action);
+            console.log('c after', res);
+            return res;
+        }
+    }
+}
+
+function applyMiddleware(...func) {
+    const middlewares = new Array(func.length);
+    func.forEach((e, idx) => {
+        middlewares[idx] = e();
+    });
+
+    return middlewares;
+}
+
+// reduce高阶函数实现compose函数（compose函数在redux源码中大量使用）
+function compose(func) {
+    return func.reduce((a, b) => (...args) => a(b(...args)));
+}
+
+// 得到一个内容为三个函数的数组
+const chain = applyMiddleware(a, b, c);
+// 得到一个层次嵌套的函数
+const todo = compose(chain);
+// 得到一个可带参的层次嵌套的函数
+const dispatch = todo(action => action);
+
+// 上述函数带实参执行
+dispatch({
+    type: 'set_log',
+})
+
+
+理解：
+用户执行dispatch → action 传入 a 副作用 → 打印 a before → 执行 a 的 next（这个 next 指向 b 副作用）→ 打印 b before → 执行 b 的 next（这个 next 指向 c 副作用）→ 打印 c before → 执行 c 的 next（这个 next 指向todo 传入的参数函数）→ 执行完毕返回到 c 副作用打印 c after → 返回到 b 打印 b after → 返回到 a 副作用打印 a after -> dispatch 执行完毕。

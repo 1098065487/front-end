@@ -1,0 +1,41 @@
+1.理解：
+拦截器的概念比中间件在逻辑上更易理解，字面意思，就是在请求或响应在then或catch处理前，拦截并添加处理逻辑，中间件的概念理解上，参照koa洋葱机制，使用高阶函数柯里化，在请求及响应过程中依次逻辑处理，或许也是这个原因，在umi项目中，官方也更推荐优先使用拦截器
+
+2.使用：
+import request from 'umi-request';
+
+// request 拦截器，改变url或options（在vue项目中的axios拦截器中，见到过根据options中的method，处理    get请求对象参数字符串化拼接到url后的，这里也可以实现）
+request.interceptors.request.use((url, options) => {
+  return {
+    url: `${url}&interceptors=yes`,
+    options: { ...options, interceptors: true },
+  }
+})
+
+// response拦截器，处理response
+request.interceptors.response.use((response, options) => {
+  const contentType = response.headers.get('Content-Type');
+  // 这里应该是有根据contentType处理response的逻辑，实例没有给出
+  return response;
+})
+// 提前对响应做异常处理
+request.interceptors.response.use(response => {
+  const codeMaps = {
+    502: '网关错误'，
+    503: '服务不可用，服务器暂时过载或维护',
+    504: '网关超时',
+  }
+  message.error(codeMaps[response.status]);
+  return response;
+})
+// 克隆响应对象做解析处理
+request.interceptors.response.use(async response => {
+  const data = await response.clone().json();
+  if(data && data.NOT_LOGIN) {
+    location.herf = '登录url';
+  }
+  return response;
+})
+
+// interceptors增强后，可直接使用
+const data = await request('/api/v1/a');

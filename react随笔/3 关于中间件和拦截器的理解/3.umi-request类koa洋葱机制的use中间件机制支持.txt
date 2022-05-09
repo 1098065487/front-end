@@ -1,0 +1,38 @@
+1.三种类型：
+1）实例中间件：request.use(fn)，不同实例创建的中间件相互独立不影响
+2）全局中间件：request.use(fn, {global: true})，不同实例共享全局中间件
+3）内核中间件：request.use(fn, {core: true})，方便开发者拓展请求内核
+
+2.fn入参：
+1）ctx，Object，上下文对象，包括req和res对象
+2）next，Function，调用下一个中间件的函数
+
+3.使用中间件对请求前后做处理
+import request from 'umi-request';
+
+request.use(async (ctx, next) => {
+  const { req } = ctx;
+  const { url, options } = req;
+  // 判断是否需要添加前缀
+  if(url.indexOf('/api') !== 0) {
+    ctx.req.url = `/api/v1/${url}`;
+  }
+  // 添加请求参数
+  ctx.req.options = {
+    ...options,
+    foo: 'foo',
+  }
+
+  await next();
+
+  const { res } = ctx;
+  const { success = false } = res;
+  if(!success) {
+    // 添加对响应的异常处理
+  }
+});
+
+// 配置增强后即可使用增强的request
+const data = await request('/api/v1/a');
+
+
