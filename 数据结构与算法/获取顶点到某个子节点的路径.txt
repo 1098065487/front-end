@@ -1,0 +1,51 @@
+1.在做自定义无限级菜单时，新增菜单需要保持原菜单的展开，需要获取原菜单的展开路径，这里就转化为：已知树的某个子节点，获取从顶点到这个子节点的路径问题
+
+2.树的数据结构，节点包含id和子树fileList，无子树fileList为null，type=1为文件夹，type=0为文件，这里添加type是因为只需要记录文件夹展开记录，去除type判断也可
+
+3.有正序获取路径和倒序获取路径的两种方法，思路都是利用数组存储路径
+
+3.1倒序：
+倒序的思路是递归查找id，直到找到目标id，将id push进入数组，并返回数组，否则将子树递归调用，并判断结果，存在结果则将id push进数组，并返回数组，否则不做处理，注意只能使用for做循环，查找到结果后，return结束循环，其他循环方式不可结束，导致结果返回出错，结果数组为路劲倒序，需要reverse()后使用
+
+for(let i = 0; i < list.length; i += 1) {
+  if(list[i].type === 1) {
+    if(list[i].id.toString() === id) {
+      openList.push(list[i].id)
+      return openList;
+    } else {
+       if(list[i].fileList !== null) {
+         let filter = getCollectIds(openList, list[i].fileList, id);
+           if(filter) {
+             openList.push(list[i].id)
+             return openList;
+           }
+        }
+    }
+  }
+}
+
+3.2正序：
+正序的思路也是递归查找id，但是是从顶点id开始，假定id存在当前遍历路径，遍历判断，从顶点开始，每次先将id push进数组，判断当前id是否为目标id，是则直接返回数组，不是则判断是否存在子树，存在则继续递归，当递归仍无结果时，将记录路径数组pop()，去除当前id，继续遍历，直到匹配上id，返回记录数组
+
+for(let i = 0; i < list.length; i += 1) {
+  openList.push(list[i].id);
+  if(list[i].type === 1) {
+    if(list[i].id.toString() === id) {
+      return openList;
+    } else {
+      if(list[i].fileList !== null) {
+        if(getCollectIds(openList, list[i].fileList, id)) {
+          return openList;
+        } else {
+          openList.pop();
+        }
+      } else {
+        openList.pop();
+      }
+    }
+  } else {
+    openList.pop();
+  }
+}
+
+4.总结：使用正序和倒序，都可以通过递归获取对应路径，但是两种算法的实际效率，应该是倒序处理更加高效，不需要反复的数组push和pop操作，但是倒序记录的结果，需要reverse()后才可以使用
