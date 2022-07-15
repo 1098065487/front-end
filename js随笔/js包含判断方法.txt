@@ -1,0 +1,14 @@
+1.字符串 包含判断方法 比较明确，使用indexOf()，判断是否-1即可判断
+
+2.数组 包含判断方法 可以分情况：
+1）仅判断，最佳使用includes()，返回true则包含
+
+2）需要定位下标，最佳使用indexOf()，可以根据返回下标，使用元素
+
+3）仅判断对象数组中是否存在满足条件的对象，最佳使用some()，根据返回true判断
+let animals = [{name: "dog"}, {name: "snake"}, {name: "monkey"}, {name: "donkey"}]
+animals.some(animal => animal.name === "monkey")
+和includes有的一比，当满足判断后，后续元素就不再比较了（比filter快）
+
+4）对象数组使用整个对象，个人用的比较多的是filter()，可以获取所有满足条件的新对象数组
+也可以使用findIndex()，可以获取满足条件的第一个元素下标

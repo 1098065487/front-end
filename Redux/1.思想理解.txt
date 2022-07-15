@@ -1,0 +1,16 @@
+应用的状态state，其变化仅为action触发，数据变化单向可溯，消除其他可能的bug。
+
+思想行为：
+1.定义应用的状态state
+2.针对state中的详细状态，编写一个个小的reducer，即接受state，action返回newState的纯函数
+3.将多个reducer封装进App（理解成一个额外的reducer，接受state，action，返回组合reducer的对象）
+
+结果：
+在应用中，通过调用不同的reducer，传入子state，action，改变对应的state，并可在全局使用
+
+具体：（即一个小reducer的创建和使用）
+1.针对需求创建一个reducer，即根据state和action入参的，返回新state的纯函数
+2.定义一个store，其值为Redux.createStore调用reducer的结果
+3.现在可以根据store.getState()获取当前的state值
+4.store.subscribe()可以调用使用state的函数，保持state的监听触发函数
+5.store.dispatch()调用，传入参数，主要是action，触发reducer，改变state的值

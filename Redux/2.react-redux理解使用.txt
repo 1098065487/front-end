@@ -1,0 +1,19 @@
+1.使用Provider包裹应用，提供应用store，其值为createStore修饰的组合reducer
+  1）Provider由react-redux提供，参数为store
+  2）createStore由redux提供，组合reducer使用combineReducers()，也由redux提供
+  3）store提供应用的state，其实就是一个个小reducer提供的变量和改变变量的方法组合而成，本质是return的        变量
+
+2.应用内组件，使用connect修饰，参数为mapStateToProps，mapDispatchToProps分别获取state和触发action改变state的方法，得到消费store的能力
+  1）mapStateToProps：根据store中组合的state，处理得到connect的组件的props，是作为props值使用，           一般设置别名使用
+  2）mapDispatchToProps：根据dispatch，处理得到connect的组件的props，作为props方法使用，得到触           发action改变state的方法，一般设置别名使用
+  3）对于较简单的组件，可以不使用上面两个参数，但要触发store变化，仍需要connect修饰，connect后在             props中，可以获取dispatch方法，可以触发action
+
+注意：
+1.store内的state值是全局共用的，当一个组件修改了某个state的值，对应另一个使用该state的组件，对应的会得到该state的变化值，并且ui变化
+2.注意state值的选用，在todoList的案例里，只有两个state，一个总list列表，一个筛选状态status，展示的数据是由status筛选出来的list，这步操作可以放在展示list组件的mapStateToProps中，reducer仅改变state
+3.action的概念，既可以独立出去，也可以混在方法中使用，本质就是配置dispatch方法的参数，因为动作明确，可以提取出来，直接在dispatch时使用也是没问题的
+
+4.dispatch方法是来源于store的，在App入口，未包裹Provider的情况，可以使用store.dispatch更新store
+5.对于一次dispatch，可能改动的state不止一处，只要对于操作而言，一个状态的变化引起多个其他状态变化，就可以通过多个reducer去写，触发state更新的action.type相同就可以
+6.store由reducer组合而来，对应的，应用的state就是各个reducer的组合，可以通过state[reducer别名]获取对应reducer的值，也就是子state
+

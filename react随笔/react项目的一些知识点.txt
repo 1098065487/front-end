@@ -1,0 +1,8 @@
+1.自定义环境变量：
+项目根目录下创建 .env文件，内部配置格式为key=value，自定义的环境变量以 REACT_APP_ 开头，可以直接在项目中使用process.env.XXX访问环境变量，比如根据process.env.NODE_ENV === 'production'判断为生产环境
+
+2.修改打包publicPath目录：
+项目部署不在服务器的根目录下，需要指定output.publicPath，在create-react-app项目中，可以通过配置在package.json中的homepage字段进行对应修改
+
+3.create-react-app拓展配置不一定根目录：
+拓展配置一般在项目根目录下添加config-overrides.js配置，也可以在package.json中配置config-overrides-path，指定该拓展文件的位置

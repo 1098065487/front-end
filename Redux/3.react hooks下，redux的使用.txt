@@ -1,0 +1,17 @@
+1.关于插件选择，store的引入，reducer，action的编写，在react hooks组件和class组件之间基本没有区别
+  1）插件都是引入redux，react-redux，redux-thunk（处理异步）
+  2）store的使用都是使用Provider组件包裹应用，store都是组合reducer（包括异步部分）
+  3）reducer和action的写法一致
+
+2.不同之处全在使用上
+  1）class组件使用redux，往往要使用connect方法修饰类组件，通过mapStateToProps，mapDispatchToProps传递处理的state和action供类组件使用，类组件在props中获取这些，进而使用
+  2）hook组件本质是函数，其使用redux的思路其实也是一样，获取state，使用dispatch下发action去改变state，react-redux针对hook组件，提供了useSelector和useDispatch两个方法，类似connect两个参数，提供hook组件获取state，下发action的能力
+
+类似hook的写法：
+const count = useSelector(state => state.count);
+const dispatch = useDispatch();
+这样，就在hook组件中可以使用state，以及dispatch下发action改变state
+
+
+
+

@@ -1,0 +1,30 @@
+1.利用a标签配合download属性：
+最简单的下载情况，已知文件下载链接，利用a标签，地址放入href，一般下载链接中包含文件名，download=""即可按链接文件名下载文件，当然配置了download，会使用download配置作为文件名。
+
+1.2 已知下载链接的情况下，还有一种下载方式，利用window对象的open()，打开一个新页面，链接为下载链接，则可以直接下载文件
+
+2.很多情况是要求点击进行下载操作，在点击后才能获取下载链接，比如接口获取，此时因为还是能获取下载链接，仍可借助a标签实现，不过a标签在操作过程中不可见，动态新增点击移除：
+const a = document.createElement('a');
+a.style.display = 'none';
+a.href = 获取的下载链接
+a.download = '';  // 设置则改变文件名
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+
+3.还有情况是：接口并不返回下载链接，以流的形式返回，此时需要修改接口响应type，获取流后，将流转为url，还是利用a标签进行下载，主要关注接口请求及响应流，流转url：
+1）请求添加响应类型为blob
+（此种情况下，responseType还可以是arraybuffer，此类型直接获取真实文件名，不用自己自定义文件名）
+responseType: "blob",
+
+2）响应结果处理
+const blob = new Blob([res.data]);  //处理文档流
+const fileName = 文件名自定义，流没有文件名了
+const a = document.createElement('a');
+a.download = fileName;
+a.style.display = 'none';
+a.href = URL.createObjectURL(blob);   // 流转为url
+document.body.appendChild(a);
+a.click();
+URL.revokeObjectURL(a.href);   // 释放URL 对象
+document.body.removeChild(a);
