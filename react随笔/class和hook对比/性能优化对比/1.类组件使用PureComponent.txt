@@ -10,4 +10,4 @@
 要想优化这一点，需要对props和state在shouldComponentUpdate时进行个性化的深层对比，此时用PureComponent或Component都行。
 
 即使是hook组件，也会存在同样的问题，函数组件接到的参数为对象时，在对比时，也是总是识别到变化，去刷新调用。
-但是可以使用memo等Memoization函数去监听外部变量是否变化，在变化的情况下，采取重新调用刷新，类似的方法在类组件中也有，比如统计页，antd pro自带的memo引用子组件的形式。
+但是可以使用memo等Memoization函数去监听外部变量是否变化，在变化的情况下，采取重新调用刷新，类似的方法在类组件中也有，比如统计页，React自带的memo引用子组件的形式。

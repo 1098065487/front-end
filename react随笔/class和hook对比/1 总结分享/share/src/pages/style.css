@@ -1,0 +1,15 @@
+.share-content {
+    width: 100%;
+    display: flex;
+}
+
+.share-left {
+    width: 300px;
+    padding-left: 20px;
+}
+
+.menu-link {
+    display: flex;
+    margin-top: 10px;
+    width: 100%;
+}

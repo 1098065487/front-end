@@ -7,3 +7,6 @@
 2.做法：
     1）class组件使用生命周期函数componentWillUnmount
     2）hook组件，在useEfffec函数中return清除方法
+
+
+useEffect return函数，并不仅仅是针对页面切换，即页面关闭时触发的方法，当页面更新时，比如props变化带来的组件更新，会更新return函数，执行，保证return函数的时效性，此时，此类受控组件的行为预期，并不符合当前页面关闭触发return函数，要解决此问题，需要利用history.location，仅当history前后不一致，表示页面切换，去触发方法即可

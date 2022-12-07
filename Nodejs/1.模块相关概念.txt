@@ -1,0 +1,44 @@
+1.CJS   CommonJS
+环境变量：module，exports，require，global
+commonjs规定：每个模块内部，module变量代表当前模块，该变量是一个对象，他有一个exports属性，该属性是对外的接口，加载某个模块，其实就是加载该模块的module.exports属性
+
+每个文件是一个模块，有自己的作用域，在文件内定义的变量、函数、类都是私有的，对其他文件不可见
+global是全局变量，多个文件内可以共同分享变量
+为了方便，node为每个模块提供了exports变量，指向module.exports，所以不可以直接给exports赋值，会切断exports和module.exports的联系（感觉模块就是module哇，不太明白）
+
+1）CJS是同步导入模块
+2）CJS不能在浏览器中工作，他必须经过转换和打包
+
+CJS模块加载是同步的，先加载整个模块，生成对象，再在这个对象上读取方法，称作运行时加载，只有对应魔模块加载完，才能执行后面的操作
+（运行时加载，可以在代码运行中，require加载模块使用，esm则是在es6编译时，加载模块引用，仅在代码顶部）
+Nodejs用于服务端编程，同步加载，本地读取速度很快
+
+2.AMD   Asynchronously Module Definition，异步模块定义
+代表库：require.js
+为浏览器加载模块服务，异步加载
+
+3.CMD   Common Module Definition，通用模块定义
+代表库：sea.js
+也是异步加载，AMD推崇前置依赖，提前执行，CMD推崇就近依赖，延迟执行
+
+3.UMD   Universal Module Definition，通用模块定义
+一种思想，兼容CJS，AMD，CMD
+先判断是否支持Nodejs模块（exports是否存在），支持就直接使用Nodejs模块（CJS），不支持，再判断是否支持AMD/CMD（define是否存在），都不存在，则挂载在window全局对象上
+1）前端和后端都适用
+2）与CJS和AMD不同，UMD更像是一种配置多个模块系统的模式
+3）使用Rollup、Webpack之类的打包器时，UMD通常用作备用模块
+
+4.ESM    ES Module
+es6原生支持的，javascript实现的标准模块化方案
+两个命令：export 和 import
+
+1）import为只读属性，不能赋值
+2）ESM具有CJS的简单语法和AMD的异步
+3）得益于ES6的静态模块结构，可以进行Tree Shaking（导入性能优化，可以单独拓展）
+4）ESM允许像Rollup这样的打包器，删除不必要的代码，减少代码包可以获得更快的加载（也就是tree shaking）
+5）export/import提升，import/export必须位于模块的顶级，不可以位于作用域内，并且对于模块内的import/export都会提升到模块的顶部
+6）可以在html中调用，<script type="module">包裹即可，但不是所有浏览器支持
+
+加载时机：
+1）import是静态命令的方式，js引擎对脚本静态分析时，遇到模块加载命令import时，会生成一个只读引用，等脚本真正执行时，再根据这个引用，到被加载的模块中去取值，模块内部引用的变化会反应到外部
+2）在import时，可以指定加载某个输出值，而不是加载整个模块，这种加载被称为编译时加载，在编译时就引入模块代码，而不是在代码运行时，所以无法实现条件加载，也正是如此，使得静态分析成为可能

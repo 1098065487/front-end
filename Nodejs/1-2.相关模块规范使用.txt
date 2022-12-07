@@ -1,0 +1,77 @@
+1.AMD   浏览器中的js模块化解决方案
+核心是通过define方法，对无序的代码进行有序的模块化定义，再通过require方法实现对模块化代码的加载
+1）通过define定义模块
+base.js:
+define(function() {
+  var control = {};
+  return control;
+})
+例子：control.js
+define(['jquery', 'jqmd5', 'cookie', 'base'], function() {
+  var control = {};
+  control.cookie = function() {
+    setTimeout(WK.LC.syncLoginState, 100);
+  }
+  control.template = function() {
+    if($('.naver').length > 0)  base.naver();
+    ......
+  }
+  return control;
+})
+2）通过require加载模块（异步）
+require(['control'], function(Control) {
+  Control.cookie();
+  Control.template();
+})
+
+2. CMD   类似AMD的用于浏览器中的js模板规范
+和AMD一样，CMD通过define定义模块，两者区别主要在于对依赖的加载上，CMD不需要在define的参数中直接声明要用到的模块，可以在运行时动态require加载
+（在define方法中对依赖加载不同：amd前置要使用的依赖，提前加载，cmd使用时才加载依赖）
+1）通过define定义模块
+define('caculator', function(require, exports) {
+  var math = require('math');
+  exports.add = function(left, right) { return math.add(left, right) };
+  exports.substract = function(left, right) { return math.substract(left, right) };
+})
+2）通过seajs加载使用模块
+seajs.use(['caculator'], function(caculator) {
+  console.log(caculator.add(1,1));
+  console.log(caculator.substract(2, 1));
+}) 
+
+3.CJS   Node中使用的模块规范
+通过exports或者module.exports来暴露模块代码，通过require来加载模块
+1）exports或者module.exports暴露模块
+exports.hello = function() { console.log('hello') };
+或者：
+module.exports = {
+  hello: function() { console.log('hello') };
+}
+2）使用require加载调用模块
+const study = require('./study.js');
+study.hello();
+
+4.UMD   一种兼容了amd，cmd，cjs的模块规范
+使用UMD规范的js模块，既可以在浏览器环境下使用，也可以在Node（服务端）环境使用
+(function(root, factory) {
+  if(typeof exports === 'object' && typeof module === 'object') {
+    // cjs
+    module.exports = factory();
+  } else if(typeof define === 'function' && define.amd) {
+    // amd、cmd
+    define([], factory);
+  } else if(typeof exports === 'object') {
+    // cjs
+    exports['math'] = factory();
+  } else {
+    // 全局对象，浏览器中是window
+    root['math'] = factory();
+  }
+})(this, function() {
+  return { add: function(left, right) { return left + right; } }
+})
+ 
+5.ESM   es6模块规范
+使用import导入模块，使用export导出模块
+日常使用，无需赘述
+
