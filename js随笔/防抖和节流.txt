@@ -72,3 +72,5 @@ var throttle = function(fn, delay) {
      函数防抖是某一段时间内只执行一次，函数节流是固定间隔时间执行。
 2）debounce场景：搜索框请求资源，windows触发resize
 3）throttle场景：鼠标不断点击，监听滚动到底部加载更多
+
+关于手写一个防抖的函数，在不考虑通用的情况下，可以简单理解，在函数外定义一个timeout，每次执行timeout非null，则清空，否则就给timeout设置延迟函数，达到防抖效果

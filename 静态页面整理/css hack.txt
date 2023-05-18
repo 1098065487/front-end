@@ -1,0 +1,30 @@
+1.理解：
+css hack通过在css中加入特殊符号，让不同浏览器识别不同，以达到应用不同样式的目的。
+（也可以理解成：针对不同版本不同品牌浏览器css解释后的不同进行处理）
+注：针对不同版本不同品牌浏览器的js特效不同进行处理，叫做 js hack
+
+2.css hack三种形式
+1）css属性hack，比如IE6能识别下划线_和星号*，IE7仅能识别星号*，firefox两个都不认识
+2）css选择器hack，比如IE6能识别*html .class{}，IE7能识别*+html .class{} 或者 *:first-child+html .class{}
+3）IE条件注释hack，这种形式主要针对IE浏览器：
+//  针对IE
+<!-[if IE]>
+<!-代码->
+<![endif]->
+//  针对IE6及以下
+<!-[if It IE 7]>
+<!-代码->
+<![endif]-> 
+
+3.各浏览器下hack写法
+1）firefox
+@-moz-document url-prefix() {}
+2）webkit内核浏览器（chrome，safari）
+@media screen and (-webkit-min-device-pixel-ratio: 0) {}
+3）opera
+@media all and (-webkit-min-device-pixel-ratio: 10000), not all and (-webkit-min-device-pixel-ratio: 0) {}
+
+大多数hack都可以通过 !important 来实现，建议慎用css hack
+
+
+

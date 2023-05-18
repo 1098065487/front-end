@@ -1,0 +1,3 @@
+document.activeElement.blur();
+
+在dom层关闭focus
