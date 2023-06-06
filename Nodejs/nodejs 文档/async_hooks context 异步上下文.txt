@@ -1,0 +1,63 @@
+1.异步上下文的两个类，主要用作状态的关联，以及状态在异步回调或promise链式中传播，他们允许在web请求的整个生命周期或其他异步期间存储数据，类似于其他语言中的线程本地存储
+
+主要包括 AsyncLocalStorage 和 AsyncResource 两个类
+这两个类都属于 async_hooks 模块，比直接使用顶层的 async_hooks 模块做了优化
+
+2.AsyncLocalStorage  
+可以通过这个类在异步操作期间创建一个一致的存储，供整个期间共享使用
+同样的实现，也可以直接通过 async_hooks 模块实现，但是已经不建议这么做，AsyncLocalStorage在性能和内存安全上更为优化
+
+1）new AsyncLocalStorage([options])
+创建AsyncLocalStorage的实例，存储需要在.run() 或者 .enterWith() 调用后，才有
+
+2）asyncLocalStorage.disable()
+禁用AsyncLocalStorage实例，在再次调用run() 或 enterWith() 之前，.getStorage() 返回的都是undefined
+当执行.disable()，当前执行上下文对该实例的链接，都会被释放，进而才可以进行垃圾回收（存储不同于实例，存储会跟随对应的异步资源一起被垃圾回收）
+
+3）asyncLocalStorage.getStore()
+返回当前存储
+如果在异步上下文环境之外调用 run() 或者 enterWith() 初始化，则返回undefined
+
+4）asyncLocalStorage.enterWith(store)
+将当前同步执行环境转换到上下文，主要是store，然后后续的异步操作，可以直接获取当下执行的store
+（即执行后，store被后续异步操作所共享，可以直接在后续异步中 getStore() 获取）
+（如果 enterWith 在事件处理中执行，后续的事件处理都在此上下文中，除非使用 AsyncResource 专门绑定其他上下文，所以一般使用 run 而不是 enterWith）
+
+5）asyncLocalStorage.run(store, callback[, ...args])
+不同于 enterWith , run 在同步中执行，在 run 的回调函数外边都无法访问 store ，回调内及内部任何异步，都可以访问 store
+
+6）asyncLocalStorage.exit(callback[, ...args])
+类似于相反的 run ，在同步中执行，在 exit 的回调中，以及回调内部的任何异步操作中，都无法访问 store ，通过 getStore() 会获取 undefined 
+
+
+3.AsyncResource 
+通过该类，可以拓展嵌入程序的异步资源，从而方便触发资源的生命周期方法
+
+1）new AsyncResource(type[, ...options])
+
+2）asyncResource.bind(fn[, this.Arg])
+将要执行的函数 fn 绑定到此AsyncResource的作用域
+
+3）asyncResource.runInAsyncScope(fn[, thisArg, ...args])
+在异步资源的执行上下文中，使用提供的参数调用函数 fn ，这个过程会建立上下文，在回调之前触发AsyncHooks，调用函数，在回调之后触发AsyncHooks，恢复原始上下文
+
+4）asyncResource.emitDestroy()
+调用所有销毁的钩子，仅调用一次，重复调用会报错
+必须手动调用，如果让GC垃圾回收，则永远不会调用destroy钩子
+
+5）asyncResource.asyncId()
+返回分配给资源的唯一的asyncId
+
+6）asyncResource.triggerAsyncId()
+返回传递给AsyncResource构造的相同的triggerAsyncId
+
+
+注：有部分代码关于连接池和事件的，还没看到其他API，看不懂，后面再来看
+https://nodejs.cn/api/async_context.html
+
+
+
+
+
+
+

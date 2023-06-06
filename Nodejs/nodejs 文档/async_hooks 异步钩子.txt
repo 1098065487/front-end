@@ -1,0 +1,34 @@
+1.异步的资源，可以理解成具有关联回调的对象，回调可能会被一次（fs.open）或多次（connect）调用.
+   资源也可以在调用回调之前关闭
+   AsyncHook没有明确区分这些不同的情况，而是统一抽象概念，表示资源
+
+官方已经不建议使用 async_hooks API，一般使用 AsyncLocalStorage 跟踪异步上下文，使用 process.getActiveResourcesInfo() 跟踪活动资源
+
+2.async_hooks.createHook(callback)   
+为每个异步操作的不同生命周期事件注册要调用的函数
+callback主要包括 init before after destroy promiseResovle 回调，且可选
+
+3.在AsyncHook回调中打印
+打印到控制台是一个异步操作，在AsyncHook回调中使用console.log()，会导致异步无限递归
+可以使用fs.writeFileSync(file, msg, flag)，同步打印到文件
+
+4. asyncHook.enable() 和 asyncHook.disable()
+启用或禁用 AsyncHook 实例，并返回这个实例，默认禁用，所以一般在 createHook 后直接 .eable() 启用
+
+5.钩子回调
+1）init(asyncId, type, triggerAsyncId, resource)
+asyncId，异步资源的唯一ID
+type，异步资源类型
+triggerAsyncId，创建异步资源的句柄ID
+resource，异步资源的引用，需要在销毁时释放
+2）before，after，destroy，promiseResolve
+
+6.async_hooks.executionAsyncResource()
+代表当前执行的资源，用于在资源中存储数据
+executionAsyncResource()返回的资源对象是未记录API的内部nodejs的句柄对象，直接对其使用任何函数或属性都可能使程序崩溃，应该避免
+
+7.async_hooks.executionAsyncId()
+返回当前执行上下文的asyncId（即异步资源Id），一般用于调用时的跟踪
+
+8.async_hooks.triggerAsyncId()
+返回当前调用回调的句柄的资源Id

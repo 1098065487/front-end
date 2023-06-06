@@ -1,0 +1,28 @@
+1.创建正则对象：（RegExp）
+1）var expression = /pattern/flags，根据flags能自动识别为正则对象，这里不是字符串的写法，要注意
+2）var expression = new RegExp(''[bc]at'', ''g'')，使用构造，这里第一个参数使用字符串，要注意转义
+3）var expression = new RegExp(/pattern/, 'g')，使用构造，这里第一个参数使用字面量，和1）类似
+一般使用1）或者3）的形式创建一个正则对象，2）的使用，要注意字符在字符串中的转义
+
+2.regexp.exec(str)
+匹配上，返回数组，值为匹配上的值，还包含两个属性：index(匹配项在字符串中的位置)和input(应用正则的字符串，即str)，不匹配则返回null
+
+3.regexp.test(str)
+匹配上则返回true，否则返回false，如果用于验证，一般要求从头到尾匹配，正则需要有^和$
+
+4.str.search(regexp)
+返回字符串正则匹配的第一个下标，匹配不上返回-1
+
+5.str.match(regexp)
+返回所有匹配的值的数组，不匹配则返回null
+
+6.str.replace(regexp, str2)
+返回替换后的str，如果不匹配，返回的是原str
+
+7.str.split(regexp)
+返回切割后的子字符串数组
+
+
+
+
+

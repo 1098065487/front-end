@@ -1,0 +1,159 @@
+1.Buffer对象表示固定长度的字节序列
+
+2.缓存区的字符编码
+1）utf8，默认此编码
+2）utf16le
+3）latin1，代表ISO-8859-1
+按编码将Buffer转为字符串，称为解码；将字符串转为Buffer，称为编码
+
+2.1.二进制编码
+1）base64
+2）base63url
+3）hex
+
+3.缓存区和迭代器
+可以使用 for .. of 迭代Buffer实例
+buf.values()  buf,keys()  buf.entries() 可以用于创建迭代器
+
+4.Blob类
+Blob封装了不可变的原始数据，可以在多个工作线程之间安全的共享
+1）new buffer.Blob([source[, options]])
+创建新的Blob对象，其中包含给定源的串接，源被复制到Blob，故可以在创建Blob后安全的修改
+
+2）blob.arrayBuffer()
+返回使用包含Blob数据副本的<ArrayBuffer>履行的promise
+
+3）blob.size
+Blob的大小，以字节为单位
+
+4）blob.slice([start[,end[,type]]])
+创建并返回Blob数据子集的新Blob，不干扰原Blob
+
+5）blob.stream()
+返回允许读取Blob内容的新ReadableStream
+
+6）blob.text()
+返回编码格式为utf8的Blob内容履行的promise
+
+7）blob.type
+Blob的内容类型
+
+4.Buffer类
+Buffer类是一个全局类型，用于直接处理二进制数据
+1）Buffer.alloc(size[, fill[, encoding]])
+
+2）Buffer.allocUnsafe(size)
+需要使用 buf.fill() 来填充，初始可能包含敏感数据
+
+3）Buffer.allocUnsafeSlow(size)
+
+4）Buffer.byteLength(string[, encoding])
+返回字符串在指定编码下的字节长度，这里注意不是平时的字符长度
+
+5）Buffer.compare(buf1, buf2)
+相当于buf1.compare(buf2)，返回-1，0，1，类似于字符串比较，但是是先转换成buffer再比较
+
+6）Buffer.concat(list[, totalLength])
+根据totalLength，连接list数组中的buffer对象实例，长度超出，按totalLength截取
+
+7）Buffer.copyBytesFrom(view[, offset[, length]])
+复制view，按照起始位置offset，复制长度length
+
+8）Buffer.from(array)
+Buffer.from(arrayBuffer[, byteOffset[, length]])
+Buffer.from(buffer)
+Buffer.from(object[, offsetOrEncoding[, length]])
+Buffer.from(string[, encoding])
+从不同类型复制转换出Buffer实例
+
+9）Buffer.isBuffer(obj)
+判断obj是否是Buffer对象，返回true或false
+
+10）Buffer.isEncoding(encoding)
+判断encoding是否是支持的字符编码，返回true或false
+
+11）Buffer.poolSize
+获取或指定预分配的内部Buffer实例大小（以字节为单位）
+
+5.实例属性及方法
+1）buf[index]
+获取或设置buf中index位置处的8位字节，越界返回undefined，越界设置不修改缓冲区
+
+2）buf.buffer
+获取创建Buffer对象的底层ArrayBuffer对象（不一定完全对应，考虑偏移byteOffset）
+
+3）buf.byteOffset
+Buffer对象底层ArrayBuffer对象的byteOffset
+当Buffer.from(ArrayBuffer, byteOffset, length)中设置byteOffset，缓冲区不会从底层的ArrayBuffer上的0偏移量开始，此时使用buf.buffer获取到的ArrayBuffer会不对应
+
+4）buf.compare(target[, targetStart[, tartgetEnd[, sourceStart[, sourceEnd]]]])
+对比buf和target，按start-end截取比较，类似字符串比较比较字节
+
+5）buf.copy(tartget[, targetStart[, sourceStart[, sourceEnd]]])
+将buf从sourceStart到sourceEnd复制进入target的targetStart位置
+
+6）buf.entries()
+根据buf，返回迭代器，键值对[index, byte]
+
+7）buf.equals(otherBuffer)
+判断buf和otherBuffer是否具有完全相同的字节，返回true或false
+
+8）buf.fill(value[, offset[, end]][, encoding])
+使用value填充buf，从offset开始到end结束，采用encoding编码
+
+9）buf.includes(value[, byteOffset][, encoding])
+判断buf中是否含有value，从byteOffset开始搜索，encoding编码，默认utf8
+
+10）buf.indexOf(value[, byteOffset][, encoding])
+类似includes方法，返回下标
+
+11）buf.keys()
+返回迭代器的buf键，使用索引
+
+12）buf.lastIndexOf(value[, byteOffset][, encodeing]);
+向后搜索查询下标，都很类似字符串的方法
+
+13）buf.length
+返回buf的字节数
+
+14）buf.subarray([start[, end]])
+返回新的buffer，引用与原缓冲区相同内存，根据start, end进行偏移裁剪
+
+15）buf.toJSON()
+返回buf的JSON表示
+
+16）buf.toString([,encoding[, start[, end]]])
+根据encoding转码buf为字符串，start，end做偏移裁剪（针对buf）
+
+17）buf.values()
+返回buf字节值的迭代器，实际在使用for...of...时，会自动调用buf.values()
+for(const val of buf.values()){} 和 for(const val of buf){} 效果一致
+
+18）buf.write(string[, offset[, length]][, encoding])
+根据encoding将string写入buf的offset处，最大写入length字节数
+
+6.File类（继承于Blob）
+1）new buffer.File(source, fileName[, options])
+创建新的File对象，来源于source，文件名为fileName，options包括endings，type(文件内容类型)，lastModified(文件的最后修改日期)
+
+2）file.name
+返回文件名
+
+3）file.lastModified
+返回file的最后修改日期
+
+
+注意：在使用Buffer时，当前API已经建议使用Buffer.from()创建并初始化buffer，此为安全的方法，保证内存根据实际去分配，避免内存消耗及可能分配到已有数据的内存，其他方法及过去的new Buffer()，会导致内存消耗过快，以及可能导致分配到已有敏感数据的内存
+
+
+
+
+
+
+
+
+
+
+
+
+

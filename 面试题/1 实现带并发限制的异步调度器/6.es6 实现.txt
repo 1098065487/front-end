@@ -1,0 +1,36 @@
+const asyncPool = (limit, array, func) => {
+  let i = 0;
+  const result = [];
+  const executing = [];
+  const enqueue = () => {
+    if(i === array.length) {
+      return Promise.resolve();
+    }
+    const item = array[i++];
+    console.log('循环', item);
+    const promise = Promise.resolve().then(() => { console.log('初始化', item); return func(item, array) });
+    result.push(promise);
+    let r = Promise.resolve();
+    if(limit <= array.length) {
+      const newPromise = promise.then(() => executing.splice(executing.indexOf(newPromise), 1));
+      executing.push(newPromise);
+      if(executing.length >= limit) {
+        console.log('运行Promise.race');
+        r = Promise.race(executing);
+      }
+    }
+    return r.then(() => enqueue());
+  }
+  return enqueue().then(() => Promise.all(result));
+}
+
+const timeout = i => {
+  return new Promise(resolve => { setTimeout(resolve, i, i) })
+}
+
+const main = async () => {
+  const aa = await asyncPool(3, [10, 20, 30, 40, 50, 60, 70, 80, 90, 100], timeout);
+  console.log('aa-----', aa);
+}
+
+main();

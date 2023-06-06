@@ -1,0 +1,38 @@
+node:child_process模块提供了衍生子进程的能力，此功能主要由child_process.spawn()函数提供
+
+默认情况下，在父nodejs进程和衍生的子进程之间，会建立stdin、stdout、和stderr管道，管道容量有限且特定于平台，如果子进程没有捕获输出，此时写入标准输出超出限制，子进程会阻塞等待管道缓冲区接受更多数据
+
+child_process.spawn()方法异步衍生子进程，不会阻塞nodejs事件循环，child_process.spawnSync()会
+
+1.异步进程创建
+child_process的spawn()、fork()、exec()、execFile()方法，都遵循js的异步编程模式，都返回ChildProcess实例，该对象实现了EventEmitter API，允许父进程注册在子进程生命周期函数调用的监听，exec()和execFile()还允许callback()，在子进程终止时调用
+
+2.在windows上生成 .bat 和 .cmd 文件
+在Unix类型操作系统上，使用child_process.execFile()更高效，他默认不衍生shell
+在Windows上，.bat 和 .cmd文件在没有终端的情况下无法自行执行，一般使用child_process的spawn()，exec()或通过衍生cmd.exe处理 .bat 或 .cmd
+
+1）child_process.exec(command[, options][, callback])
+衍生shell，然后在shell中执行command
+2）child_process.execFile(file[, args][, options][, callback])
+不衍生shell，执行可执行文件file作为新进程，其比child_process.exec()略有效率
+3）child_process.fork(modulePath[, args][, options])
+属于child_process.spawn()的特例，专门用于衍生新的nodejs进程
+4）child_process.spawn(command[, args][, options])
+使用给定的command和args衍生新进程
+
+3.同步进程创建
+同步会带来阻塞，有时候阻塞在某些场景下很有用
+同步方法包括child_process的spawnSync()、execSync()、execFileSync()
+
+
+
+
+
+
+
+
+
+
+
+
+

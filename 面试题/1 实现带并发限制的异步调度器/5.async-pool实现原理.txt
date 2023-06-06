@@ -1,0 +1,16 @@
+整理async-pool实现原理：
+针对数组array，定义一个结果数组result和一个正在执行数组executing，遍历array，将每一项创建一个promise，回调中去执行异步方法，并塞进result，基于这个promise，创建新的promise，且后面链式回调中去删除executing中的自身，并塞进executing，保证executing里面只有待执行的promise
+当限制大于array时，可以直接Promise.all(result)，否则进行处理，新的promise塞进executing，当executing长度大于等于limit的时候，Promise.race(executing)，并在回调中递归调用方法，重复塞值操作
+
+保证在前面，卡着limit限制，进行race操作，执行部分promise，结果已经存在result，最后剩的limit个promise，all操作执行promise，两种操作并不冲突
+
+
+es7 async-pool的实现，使用async await，消除了递归函数，思想基本相同
+针对array，定义结果数组result，正在执行数组executing，遍历array，将创建的promise塞入result，回调中调用异步方法
+仅当limit小于array长度时操作，在promise基础上创建新的promise，塞入executing，回调中会删除executing中的自身，当executing长度大于等于limit，使用await Promise.race(executing)，保证异步完成前都在等待中，下一次循环则拿到最新的executing长度，不用递归也可以实现
+
+
+理解上，async-pool中使用了Promise.race()，是不是意味着存在一部分并发度为1的异步操作，特意去查了一下：
+尽管理解上并发度是1，但实际上，executing数组是动态变化的，每次race实际是按照limit去并发的，执行完一个promise后，新的会直接加进来，这个速度会比后续链式异步执行操作要快得多，约等于仍是在以limit进行并发操作
+
+

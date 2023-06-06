@@ -1,0 +1,14 @@
+问题的本质是实现Promise的并发限制
+
+Promise的两个方法：all()和race()，实际都是并发执行，all()等待所有结果完毕执行后续链式，race()只要得到一个结果反馈，就执行后续链式。因此，针对Promise的并发限制处理，只能放在promise的对象实现上，即控制执行all()或race()的promise数组数量
+
+实际上，针对Promise的并发限制，已有不少第三方包，比如async-pool、es6-promise-pool、p-limit
+
+基本上自己实现的思路，都是控制创建运行all或race的promise数组，按照limit创建promise数组，promise在第一次then回调中，去执行递归函数，递归函数内部，判断当promise数组长度大于0时，可以shift出单项，去执行异步操作，完成后在回调中继续调用递归函数，在保证limit的情况下，直至promise数组清空，实现并发限制
+（使用race基本类似，在race有结果返回时，处理有结果的出数组，将未执行的加入重新race，直至数组清空）
+
+async-pool实现思路：
+1.根据数组创建promise对象，同时使用一个新数组存储正在执行的promise对象
+2.当初始化数量达到limit限制，使用Promise.race()，当一个promise执行完，将新的promise加入新数组
+3.所有的promise执行完毕，调用Promise.all()返回
+

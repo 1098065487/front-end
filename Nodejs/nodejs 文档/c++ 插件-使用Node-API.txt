@@ -1,0 +1,10 @@
+Node-API（N-API）是用于构建原生插件的API，独立于js运行时，作为nodejs的一部分进行维护
+此API在nodejs中保持稳定的二进制接口ABI，隔离插件和底层js引擎的变化
+
+1.Node-API属性：
+1）所有Node-API调用返回napi_status类型的状态码，指示调用成功还是失败
+2）API的返回值通过out参数传递
+3）所有js值被抽象为napi_value的不透明类型
+4）出现错误的状态码，可以使用napi_get_last_error_info获取附加信息
+
+API给出文档都是基于c++的，没办法学习下去，粗略扫一遍
