@@ -1,0 +1,25 @@
+react15 到 react16，架构上的改变主要是为了将老的 同步更新 转变为 异步可中断更新
+
+异步可中断更新，即在执行过程中可能被打断，比如浏览器的时间分片用尽或有更高优先级任务插队，当可以继续执行时，又恢复到之前的执行中间态
+
+实际上，浏览器原生支持类似的实现，即Generator，但是generator基于react使用上有一些问题，比如：generator在执行的中间状态是上下文关联的，可以理解为执行过程是线性的，当存在插队任务干扰到中间态，之前的中间态就无法使用了，需要重新从头处理，显然不合适
+
+fiber可以理解为一套满足上面中间状态要求的更新机制，fiber针对要更新的模块，直接生成整个模板状态的中间状态，当有新的插队任务进来，做的是整个状态的更新，而不是线性的某个步骤的更新，这样的中间状态可以继续使用
+
+实际上，现在react虚拟dom，有了正式名称 fiber 
+react15 reconciler 采用递归的方式创建虚拟dom，递归过程不可中断，可能有卡顿，react16 为了解决卡顿，采用将 同步递归更新 重构为 异步可中断更新，之前的递归虚拟dom就得更改了，于是有了fiber 
+
+可以这样理解fiber：
+1.作为架构：react15 的reconciler采用递归方式执行，数据保存在递归调用栈中，也叫 stack reconciler，react16 的reconciler基于fiber节点实现，称为fiber reconciler
+2.作为静态数据结构：fiber节点对应一个个react element，保存了节点对应的类型和dom节点信息
+3.作为动态工作单元：每个fiber节点还保存了本次跟新中该组件改变的状态，要执行的工作
+
+fiber架构工作：
+fiber架构在使用中，采用了双缓存的做法，即在内存中构建并直接替换fiber树（虚拟dom树的创建和更新）
+
+在使用react中，会同时存在两颗fiber树，当前显示的 current fiber树 和 内存中构建的workInProgress fiber树，两颗fiber树中的fiber节点，互相通过alternate属性连接，react应用的根节点通过current指针在不同fiber树的rootFiber之间切换，实现更新
+（初始一颗current fiber树，每次更新，内存中直接通过alternate生成workInProgress fiber树，并在内存中完成树的更新，然后current指针指向替换，直接更新整个树，重复更新步骤）
+
+
+
+

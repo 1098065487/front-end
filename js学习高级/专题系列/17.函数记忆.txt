@@ -1,0 +1,17 @@
+memoize函数，包装一个函数，将计算结果和对应参数缓存到一个对象中，当调用时，根据参数是否存在缓存中，可以直接返回结果；underscore和lodash都有memoize的实现，这里memoization来源于memo，备忘录的意思，不是memorize记忆
+
+1.定义：函数记忆指将函数计算结果缓存，当下次调用时，遇到相同参数，直接跳过计算返回缓存的结果
+2.原理：实现memoize函数，原理上通过把参数和对应结果缓存到一个对象上去实现
+3.实现思路：
+1）第一版：
+function memoize(f) {
+  var cache = {};
+  return function() {
+    var key = arguments.length + Array.prototype.join.call(arguments, ",");
+    if(key in cache) {
+      return cache[key];
+    } else {
+      return cache[key] = f.apply(this, arguments);
+    }
+  }
+}

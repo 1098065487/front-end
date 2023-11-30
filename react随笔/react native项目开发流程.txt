@@ -1,0 +1,12 @@
+整理了下关于react native项目开发的前期准备流程，实际上理解后，也很清晰，乱查资料会让人很烦
+
+1.首先，创建一个react native工程很简单，根据网上查到的命令行即可
+2.其次，并没有规定使用什么ide去打开react native工程和运行，实际上，只要有支持移动端开发的环境和设备，就可以直接在任何ide中去根据命令执行，运行react native工程
+3.所以重点来了，主要是要搭建好react native的运行环境
+1）jdk安装，根据react native版本的不同，可能需要不同版本的jdk，一般我们电脑上会装好jdk8，并配置好环境变量，当我们使用最新版react native时，根据运行提示，可以将jdk11的安装路径配置到项目中去gradle.properties=...，注意下windows下反斜杠需要转义，也能运行起来
+2）android sdk支持，一般通过android studio去管理android sdk的版本，可以在studio中的sdk manager中去不断下载不同版本的sdk支持（这里可能有问题，要保证外网连接，不然很多都下不下来），注意安装完studio，再去管理sdk，而下载sdk会配置sdk的下载地址，这个也要配置到环境变量中去，保证可以通过命令访问到
+4.有了环境，最终跑起来还需要设备，真机跑是最简单的，连接电脑直接跑，要么就得借助模拟器，要么使用android studio中的模拟器，要么下载其他三方的模拟器，比如夜神模拟器
+
+
+https://juejin.cn/post/7041840421806932005#heading-11
+https://blog.csdn.net/chmod_r_755/category_9695818.html

@@ -1,0 +1,41 @@
+1.引子：
+使用深拷贝的场景很多，我这边的一个场景是，针对树形列表做遍历查询筛选，当清空查询时，希望还原原树形结构做渲染，需要深拷贝这个树形列表，使用拷贝去做查询
+简单来说就是涉及到引用类型，在复制并改变时，不希望修改时干扰到原数据，简单的复制和浅拷贝，都会有复制数据后修改，同时改变了原数据的情况
+
+2.开发中大多使用lodash的cloneDeep()方法
+var _ = require("lodash");
+var obj1 = {...};
+var obj2 = _.cloneDeep(obj1);
+
+3.面试中的重点：递归实现
+1）基本递归
+function cloneDeep(obj) {
+  const newObj = {};
+  let keys = Object.keys(obj);
+  let key = null;
+  let data = null;
+  keys.forEach(e => {
+    key = e;
+    data = obj[key];
+    if(data && typeof data === 'object') {
+      newObj[key] = cloneDeep(data);
+    } else {
+      newObj[key] = data;
+    }
+  })
+  return newObj;
+}
+
+
+手写防抖
+let timer = null;
+    function debounce(fn,wait) {
+        let timer = null;
+        return function () {
+            if (timer != null) clearTimeout(timer)
+            let context = this;
+            let args = arguments;
+            timer = setTimeout(() => fn.apply(context, args),wait)
+        }
+    }
+

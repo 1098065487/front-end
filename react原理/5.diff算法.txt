@@ -1,0 +1,62 @@
+一个dom节点在同一时刻最多有4个节点与他相关：
+1）current fiber，当前dom节点对应的fiber节点
+2）workInProgress fiber，当前dom节点即将更新，在内存中对应的fiber节点（初始与current fiber一致）
+3）当前dom节点
+4）JSX对象，类组件或函数组件返回的结果，内含描述dom的信息
+
+diff算法的本质，就是对比1和4，生成2，最后指针替换2为3
+
+diff算法在树的对比上，算法复杂度基本要到O(n3)，这样的性能开销是不被接受的，为此，react在使用diff算法时，会预设三个限制，将树的对比保持在一次遍历以内，算法复杂度O(n)：
+1）只对同级元素进行diff，如果一个dom节点在前后两次更新中跨层级了，react不会尝试复用
+2）两个不同类型的元素会产生不同的树，当元素类型变化，react不会复用，会直接销毁旧类型，创建新类型
+3）可以通过key prop来暗示部分子元素在不同渲染下保持稳定，当类型相同，key相同，仅仅是位置变化时，react会采取复用
+
+处理diff，可以根据同级节点数量，分两类：
+1）当newChild类型为object、number、string，表示只有一个节点
+2）当newChild类型为Array，表示同级有多个节点
+
+1）单节点diff
+react先判断key是否相同，再判断type是否相同，都相同才复用这个dom节点
+这里关注下关于节点child的处理：
+1>当child存在，key相同，type不同，会删除child和其兄弟fiber
+2>当child存在，key不同，仅将child删除
+
+2）多节点diff
+多节点的可能性有三种：（可以是三种的组合或单独）
+1.仅节点更新，数量和顺序不变
+2.节点数量变化，新增或减少
+3.节点位置变化
+
+diff的思路：
+更新在日常中发生的频率更高，优先判断是否更新，diff算法针对多节点，会采用两次遍历，第一次遍历处理更新的节点，第二次遍历处理不属于更新的节点
+1.第一轮遍历：
+1）let i = 0，遍历newChildren，对比newChildren[i] 和 oldFiber，判断是否可以复用dom节点
+2）如果可以复用，i++，继续比较newChildren[i] 和 oldFiber.sibling，可以复用则继续
+3）如果不可以复用，分两种情况：
+1>key不同导致不可复用，直接跳出整个循环，第一次遍历结束
+2>key相同，type不同导致不可复用，将oldFiber标记为DELETION，继续遍历
+4）如果newChildren遍历结束（i===newChildren.length - 1），或者oldFiber遍历结束（oldFiber.sibling === null），跳出遍历，第一次循环结束
+
+第一次循环结束有4种可能：
+1）步骤3）跳出循环，newChildren和oldFiber都没有遍历完
+步骤4）跳出循环：
+2）newChildren和oldFiber都刚好遍历完（一次循环解决了更新，不需要第二次了）
+3）newChildren遍历完，oldFiber没有（删除oldFiber剩余的节点 Deletion）
+4）newChildren没遍历完，oldFiber遍历完了（增加newChildren剩余的节点 Placement）
+
+这里1）表示可能有节点改变了位置，需要考虑节点的移动：
+考虑节点的移动，则不能再直接按位置索引去对比，这里就会使用key来处理，将newChildren、oldFiber按照key，value的形式组成mapList，通过遍历newChildren[i].key，匹配oldFiber，来确定有没有可复用的oldFiber节点
+
+处理移动：
+1）首先，是通过遍历newChildren，去匹配oldFiber
+2）判断是否移动的标志，是最后一个可复用节点在oldFiber的位置索引（lastPlacedIndex）
+这也很好理解，初始lastPlacedIndex = 0，随着遍历，如果按newChildren的顺序正序匹配的index大于lastPlacedIndex，则该节点可以不动，lastPlacedIndex变为index的值，直至新index的值小于lastPlacedIndex，表明该值是需要往后移动的，这种匹配方式也导致，不建议在使用中，将后面节点提前到前面去
+3）初始化lastPlacedIndex = 0，遍历newChildren，判断遍历节点在oldFiber中的位置，大于lastPlacedIndex，则替换，小于则表明需要后移
+
+
+
+
+
+
+
+

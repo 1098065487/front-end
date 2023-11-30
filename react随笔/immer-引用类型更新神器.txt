@@ -1,0 +1,12 @@
+在react中，常常涉及到引用数据类型的更新，比如reducer里面要求返回新的state，当引用数据类型结构复杂的情况下，手动去更新内层的某个属性，需要写很多模板代码去展开数据层，比较麻烦
+
+一般有工具immer，去简化操作实现
+
+immer提供produce方法，在produce内部，有一个函数参数，该函数接受一个draft草稿，可以直接对该草稿进行属性更新，这里的produce会生成一个新的引用类型数据，作为引用数据的更新态
+
+本质上，immer使用了es6的Proxy属性（实现了JS的不可变数据结构检测。过程中共享了未被修改的数据，更新后返回了一个全新的引用），将对象代理去到一个新的对象返回，并添加处理，有时间可以整理下immer的源码
+https://zhuanlan.zhihu.com/p/146773995
+
+在react hooks写法中，有useImmer和useImmerReducer（都是三方插件immer.js 的 use-immer），可以直接使用
+
+实际上，在此之前，处理引用数据类型深层更新的优化，react使用的immutable.js，内部定义了大量的数据结构，immer.js属于他的简化版，采用了不同的实现思路

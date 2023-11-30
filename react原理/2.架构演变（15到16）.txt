@@ -1,0 +1,50 @@
+react 15到16，重构了整个架构
+
+1）v15
+react15架构理解为两层：
+1.reconciler，协调器，负责确定变化的组件
+2.renderer，渲染器，负责将变化的组件渲染到页面
+
+reconciler（协调器）：
+调用react组件的render方法，将JSX转化为虚拟dom，新旧虚拟dom对比，确定需要更新的虚拟dom，然后通知renderer将变化的虚拟dom渲染到页面去
+
+renderer（渲染器）：
+react支持跨平台，渲染器根据不同平台，有不同实现，比如浏览器环境的渲染器react-dom，除此外还有ReactNative，ReactTest平台下的渲染器，渲染器主要工作，就是将reconciler通知的变化渲染到当前环境下
+
+2）v15架构的问题：
+在react15中，reconciler过程中，mount的组件会调用mountComponent，update的组件会调用updateComponent，这两个方法都会递归更新子组件
+
+递归执行，则一旦执行无法中断，当递归的层级很深，超过16ms，用户交互就会出现卡顿现象
+
+v15架构下，reconciler和renderer的工作是交互的，即reconciler发现变化通知renderer去更新，再发现再更新，如果按照react快速响应的思想，将同步更新转为可中断的异步更新，则会出现部分更新态展示的情况，而这是不期望出现的，所有v16直接重构了整个架构
+
+3）v16
+react16架构分3层：
+1.scheduler，调度器，负责调度任务优先级，安排高优先级任务进入reconciler
+2.reconciler，协调器，负责确定变化的组件
+3.renderer，渲染器，负责将变化的组件渲染到页面上
+
+scheduler（调度器）：
+scheduler一方面实现了在浏览器空闲时间触发回调，一方面还提供了多种调度优先级供任务设置
+
+浏览器根据是否有剩余时间作为任务中断的标准，相对应的，scheduler实现了当浏览器还有剩余时间时，触发回调继续去执行任务，部分浏览器实现了requestIdleCallback API去实现浏览器剩余时间去反馈，但是由于兼容性和不稳定性没有使用，scheduler相当于他的polyfill，已经是一个独立的库了
+
+reconciler（协调器）：
+不同于v15的递归处理虚拟dom，v16将递归转为了可中断的循环，针对中断的中间态（渲染不完全），react16改变了reconciler和renderer交替工作的行为：
+当scheduler将任务交给reconciler，reconciler将变化的虚拟dom打上增删改的标记，整个scheduler和reconciler的过程在内存中进行，仅当所有组件都完成reconciler的工作，才会统一交给renderer（保证没有渲染的中间态）
+
+renderer（渲染器）：
+renderer根据reconciler给虚拟dom打上的标记，同步执行dom操作
+
+4）总结：
+react 15使用堆栈，递归的reconciler形式，也叫stack reconciler，实现架构
+react 16使用fiber，可中断的reconciler形式，也叫fiber reconciler，实现架构
+
+
+
+
+
+
+
+
+

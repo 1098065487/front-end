@@ -1,0 +1,74 @@
+主要是梳理react是怎么从JSX，创建fiber节点，并构建fiber树，以及后续更新fiber树
+
+1.render阶段（分为创建时期的mount，和更新时期的update）
+暂不考虑fiber树更新的复杂逻辑，仅考虑初始mount和更新update，fiber树的生成，发生在render阶段
+（update阶段，是内存中的fiber树更新后，直接切换指针指向，相当于也是生成fiber树）
+
+fiber reconciler是由stack reconciler重构而来，以遍历的形式实现可中断的递归，本质上fiber树的生成（也就是虚拟dom树），还是可以看作两种部分，递和归
+
+这也很好理解，生成一棵树，并判断生成结束，需要有顶层根节点开始，先下递，创建子节点，当没有子节点了，就会上归，首先判断是否有兄弟节点，如果有，生成兄弟节点并下递，类似操作，直至上归到根节点，表明树生成结束
+
+递和归的过程，分别会调用beginWork 和 completeWork
+
+1）beginWork
+beginWork可以根据current指针是否指向null，判断组件所处是mount还是update，来生成workInProgress fiber node
+
+mount时，current为null，会根据fiber.tag去创建不同类型的fiber节点
+update时，current存在，满足一定条件下去复用current节点，克隆current.child为workInProgress.child，有变动则根据diff去更新，最终作为新的fiber节点
+
+最终beginWork都会生成fiber节点，节点上可能存在effectTag，并作为beginWork的返回值
+
+2）completeWork
+completeWork也会根据不同的fiber.tag去调用不同的处理逻辑，在未整理fiber实现的情况下，先关注页面渲染所必须的HostComponent（原生dom组件对应的fiber节点）
+同样的，也要根据current是否为null来判断是mount 还是 update，HostComponent判断update还需要判断workInProgress.stateNode !== null
+
+mount 和 update 在 completeWork 中关于更新的做法类似，区别在于mount会为fiber节点创建对应的dom节点，并将子孙dom节点插入生成的dom节点中，update则是直接使用内存中已经存在的dom节点
+
+更新主要考虑：
+onClick，onChange等回调函数的注册
+处理style prop
+处理DANGEROUSLY_SET_INNER_HTML prop
+处理 children prop
+处理完的props会被赋值给workInProgress.updateQueue，并最终在commit阶段渲染到页面上
+
+render阶段主要就是fiber树的生成，fiber节点上的effectTag会在commit阶段被处理，但是为了效率，commit阶段的操作并不是再遍历一次fiber树，实际在completeWork阶段，会将存在effectTag的节点，保存在effectList的单向列表中，方便commit阶段直接调用
+（不同于fiber树的生成，effect的处理并不需要反馈，相当于递归遍历一次树，这在生成阶段已经处理过一次，使用单向列表，直接遍历，也不用考虑树的递归，速度更快，这样很好理解）
+
+2.commit阶段
+commit阶段，主要处理fiber树在update过程中，effect的执行，此外还包括一些生命周期钩子，比如componentDidMount、useEffect hook等
+（简单理解为在两次fiber树变化之间，所做的update操作，主要是副作用导致的，还包括一些钩子）
+
+commit阶段的工作（即renderer的工作）分三部分：
+1）before mutation阶段（执行dom操作前）
+2）mutation阶段（执行dom操作）
+3）layout阶段（执行dom操作后）
+
+1）before mutation阶段，会遍历effectList，并调用commitBeforeMutationEffects，该函数处理三步：
+1>处理dom渲染/删除后的autoFocus、blur逻辑
+2>调用getSnapshotBeforeUpdate生命周期函数
+3>调度useEffect
+
+react16开始，对15及以前的componentDidXXX钩子增加了UNSAFE_前缀，原因是stack reconciler重构为fiber reconciler，render阶段的任务可能中断重开，render阶段的生命周期函数可能会触发多次，16开始使用新的生命周期函数，getSnapshotBeforeUpdate，看名字就知道，这个生命周期函数不在是去的某一个状态，而是处理整个fiber树的状态，取当前快照做处理，可以中断重开
+
+2）mutation阶段也会遍历effectList，调用commitMutationEffects，该函数处理也是三步：
+1>根据ContentReset effectTag重置文字节点
+2>更新ref
+3>根据effectTag处理（Placement | Update | Deletion | Hydrating）
+
+3）layout阶段时，dom已经渲染完成，该阶段的生命周期函数和hook可以直接访问dom
+该阶段也会遍历effectList，执行commitLayoutEffects，该函数处理两步：
+1>commitLayoutEffectOnFiber（调用生命周期函数和hook）
+2>commitAttachRef（赋值ref）
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+前面理解的fiber reconciler之类的，都属于react架构的理念部分，理解一个状态更新的全流程，能更好的理解这些理念。
+
+状态更新的关键节点：
+1.触发状态更新（根据场景调用不同方法）
+2.创建Update对象
+3.从fiber到root（markUpdateLaneFromFiberToRoot）
+4.调度更新（ensureRootIsScheduled）
+5.render阶段（performSyncWorkOnRoot 或 performConcurrentWorkOnRoot）
+6.commit阶段（commitRoot）
+
+react中触发状态更新的方法：
+1）ReactDOM.render
+2）this.setState
+3）this.forceUpdate
+4）useState
+5）useReducer
+
+react15，属于同步更新的react，状态更新只能按顺序一一更新
+react16，属于并发更新的react，状态更新有优先级，当有高优先级时，会中断低优先级的更新，先完成高优先级的render-commit流程，再基于结果重新更新低优先级的更新
+
+Update的结构：
+lane：优先级相关
+tag：更新的类型，包括UpdateState | ReplaceState | ForceUpdate | CaptureUpdate
+payload：更新挂载的数据
+callback：更新的回调函数
+next：可与其他Update连接成为链表
+
+类似于fiber节点利用单向链表组成fiber树，单个fiber节点上多个Update会组成链表，保存在fiber.UpdateQueue中
+
+UpdateQueue的结构：
+baseState：本次更新前，该fiber节点的state，Update会基于该state计算出更新后的state
+firstBaseUpdate与lastBaseUpdate：本次更新前，该fiber节点已保存的Update，存在值的情况表明该fiber节        点存在低优先级的Update被保存，正在执行高优先级的Update，first表示Update链表头，last表示链表尾
+shared.pending：触发更新时，产生的Update会保存在shared.pending中形成单向环状列表，计算更新时，环        被剪开并连接在lastBaseUpdate后面，注意shared.pending会始终指向最后一个插入的update，update        间通过next指向形成环状
+
+当一次UpdateQueue遍历后（低优先级的会先跳过），获得的state就是本次更新的state，叫做memoizedState，state的变化在render阶段产生与上次更新不同的JSX，通过diff算法产生effectTag，在commit阶段渲染在页面上，渲染完成后，workInProgress fiber树变为current fiber树，整个更新流程结束
+
+
+优先级：
+1）生命周期方法，同步执行，高优先级
+2）受控的用户输入，比如输入框文字输入，同步执行，高优先级
+3）交互时间，比如动画，高优先级
+4）其他，比如数据请求，低优先级
+
+根据给出的案例，实际在执行更新时，当高优先级的u2在低优先级的u1后面时，会先执行u2，当u2执行完，并不是简单的执行u1，而是在有u2的基础上（baseUpdate已有u2的更新），再执行u1，u2对应的更新执行了两次，render阶段的生命周期钩子componentDidXXX执行了两次，所以标记为unsafe_
+
+有两个问题：
+1）render阶段可能中断，怎么保证updateQueue中的Update不丢失？
+1.在render阶段，share.pending的环被剪开并连接在current updateQueue.lastBaseUpdate后面，同时也会接   在workInProgress updateQueue.lastBaseUpdate后面
+2.当render被中断后重新开始，会基于current updateQueue克隆出workInProgress updateQueue，current    updateQueue.lastBaseUpdate上已经保存了上一次的Update，所以不会丢失
+3.当commit阶段完成渲染，workInProgress fiber树会变成 current fiber树，由于workInProgress    updateQueue.lastBaseUpdate上保存了上一次的Update，也不会造成丢失
+
+2）存在当前状态需要依赖前一个状态，当存在跳过低优先级的情况下，如何保证状态依赖的连续性？
+举例有更新A1 - B2 - C1 - D2，1表示高优先级，2表示低优先级
+1.当某个Update由于低优先级被跳过，保存在baseUpdate上的不仅仅是该Update，还包括链表中该Update后   所有的Update，按照案例，则是 b2-c1-d2
+2.与此同时，baseState上保存的，也不一定是上次更新的memoizedState，按照案例，上一次更新的   memoizedState为AC，而baseState为A，保证连续性
+
+
+
+
+
+
+
+
+
+

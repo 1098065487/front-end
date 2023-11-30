@@ -1,0 +1,52 @@
+1.es6 Set去重
+const newArr = Array.from(new Set(preArr));
+注：es6兼容问题，暂时不支持空对象 {} 的去重
+
+2.两层for循环对比，使用splice()删除重复元素
+for(let i = 0; i < arr.length; i++) {
+  for(let j = i+1; j < arr.length; j++) {
+    if(arr[i] === arr[j]) {
+      arr.splice(j, 1);
+      j--;  // 这里splice删除后，需要将下标减一，继续比较新值，因为splice会干扰原数组
+    }
+  }
+}
+注：NaN和 {} 没有去重，null直接丢失
+
+3.新建空数组，一次for循环旧数组，判断空数组是否存在当前循环元素，存在则跳过，不存在则push进空数组
+const newArr = [];
+for(let i = 0; i < preArr.length; i++) {
+  if(newArr.indexOf(preArr[i]) === -1) {
+    newArr.push(preArr[i]);
+  }
+}
+注：NaN和 {} 没有去重
+
+4.和3类似，判断存在方法使用includes
+const newArr = [];
+for(let i = 0; i < preArr.length; i++) {
+  if( !newArr.includes(preArr[i]) {
+    newArr.push(preArr[i]);
+  }
+}
+注：{}没有去重
+
+5.先用sort()排序，再遍历相邻元素比较去重
+const arr = preArr.sort();  // sort()默认按字母升序
+const newArr = [arr[0]];
+for(let i = 1; i < arr.length; i++) {
+  if(arr[i] !== arr[i - 1]) {
+    newArr.push(arr[i]);
+  }
+}
+注：NaN和 {} 没有去重
+
+6.利用对象的hasOwnProperty方法，根据类型+字段为键名，甚至可以去重NaN和{}
+let obj = {};
+const newArr = preArr.filter(e => {
+  if(obj.hasOwnProperty(typeof e + e)) {
+    return false;
+  } else {
+    
+  }
+})
