@@ -1,0 +1,30 @@
+针对vue-router push的单页应用，ios手势返回，可能会带来页面的闪烁，原因可能有两种：
+
+1.手势返回并不能直接router.back，需要等手势事件触发返回才能返回，这段事件，页面会先默认回到当前页，再返回上一页，当页面dom节点较多时，就会出现渲染闪烁的情况
+2.当返回的上一页是个列表，一般会在store中记录滚动位置，返回时重新定位到当前位置，可能会有先到列表头，再到定位位置的闪烁情况
+
+
+针对这些闪烁情况，对应的解决办法：
+
+1.使用beforeRouteLeave监听页面离开当前页，当页面离开时，使用v-if不展示页面节点，该方法执行时机在router change和beforeDestroy之前，故可以生效
+2.在页面返回重新定位之前，手动触发置顶滚动一次，消除页面先滚动到顶部再滚动下来的闪烁，使用方法：
+window.scrollTo(0, 1)
+window.scrollTo(0, 0)
+直接置顶，速度会比默认的要快，闪烁会消除掉
+
+
+理解下vue的路由导航流程：（完整的导航解析流程）
+1.导航被触发。
+2.在失活的组件里调用 beforeRouteLeave 守卫。
+3.调用全局的 beforeEach 守卫。
+4.在重用的组件里调用 beforeRouteUpdate 守卫(2.2+)。
+5.在路由配置里调用 beforeEnter。
+6.解析异步路由组件。
+7.在被激活的组件里调用 beforeRouteEnter。
+8.调用全局的 beforeResolve 守卫(2.5+)。
+9.导航被确认。
+10.调用全局的 afterEach 钩子。
+11.触发 DOM 更新。
+12.调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入。
+
+详见：https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
