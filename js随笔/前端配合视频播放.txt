@@ -1,0 +1,6 @@
+前端视频播放，目前一般还是通过video标签处理，这里有兼容性问题需要考虑，后端配合处理
+
+1.目前浏览器支持原因，不支持最新的编码格式，一般默认h.264编码即可，视频mime可以判断codecs包含avc1
+   如（video/mp4; codecs="avc1.4d042a,mp4a.40.2"; profiles="isom,iso2,avc1,mp41"）
+2.ios不支持部分高profile和level的视频编码格式，一般默认high profile以下，level 6.0 以下
+   profile和level判断，见https://blog.51cto.com/u_13316945/5832291

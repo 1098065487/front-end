@@ -1,0 +1,17 @@
+在实际实验中，已经设置使用npm config set <url>的，使用nrm设置会有权限问题，一直无法解决，猜测是使用set，生成了优先级较高的.npmrc文件，nrm修改文件没有权限。
+
+1.安装nrm（不同于nvm，直接命令安装）
+npm install -g nrm
+
+2.增加源
+nrm add <registry> <url>
+
+3.查看
+nrm ls       查看源list
+nrm current         查看当前源
+
+4.切换
+nrm use <registry>
+
+6.删除
+nrm del <registry>

@@ -1,0 +1,125 @@
+export default {
+	inject: {
+		isNestList: {
+			type: Boolean,
+			default: false,
+		}
+	},
+	props: {
+		// 用于显示url hash，需要返回关闭弹窗时值不能为空
+		id: {
+			type: String,
+			default: "",
+		},
+		isPreventClose: {
+			type: Boolean,
+			default: false,
+		},
+		// 是否可见
+		visible: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	computed: {
+		// 当前弹窗的hash值
+		selfHashValue() {
+			return this.id || this.popId ? `#${this.id || this.popId}` : "";
+		},
+	},
+	data() {
+		return {
+			isHashPopVisible: this.visible,
+		};
+	},
+	watch: {
+		visible(val) {
+			if (this.id) {
+				if (val) {
+					this.isHashPopVisible = true;
+					this.initCurrentHash();
+				} else {
+					this.removeHashChangeListener();
+					if (this.isHashPopVisible) {
+						this.isHashPopVisible = false;
+						this.maybeNeedBack();
+					}
+				}
+			}
+		},
+		visiblePop(val) {
+			if (this.popId) {
+				if (val) {
+					this.isHashPopVisible = true;
+					this.initCurrentHash();
+				} else {
+					this.removeHashChangeListener();
+					if (this.isHashPopVisible) {
+						this.isHashPopVisible = false;
+						this.maybeNeedBack();
+					}
+				}
+			}
+		}
+	},
+	mounted() {
+		this.id && this.visible && this.initCurrentHash();
+	},
+	beforeDestroy() {
+		if (this.id && this.visible) {
+			this.removeHashChangeListener();
+			if (this.isHashPopVisible) {
+				this.maybeNeedBack();
+			}
+		}
+	},
+	methods: {
+		handleClose() {
+			if (this.isPreventClose) {
+				this.$emit("preventClose");
+			} else {
+				this.isHashPopVisible = false;
+				this.maybeNeedBack();
+				this.$emit("close");
+			}
+		},
+		maybeNeedBack() {
+			if ((this.id || this.popId) && this.isCurrentHash() && !this.isNestList) {
+				this.$router.back();
+			}
+		},
+		// 设置当前弹窗的hash
+		initCurrentHash() {
+			if (!this.isCurrentHash()) {
+				this.$router.push(this.$route.fullPath + this.selfHashValue);
+			}
+
+			this.addHashChangeListener();
+		},
+		addHashChangeListener() {
+			window.addEventListener("hashchange", this.onHashChange, false);
+		},
+		removeHashChangeListener() {
+			window.removeEventListener("hashchange", this.onHashChange, false);
+		},
+		onHashChange() {
+			// 浏览器点击后退按钮时，关闭弹窗
+			if (this.id && this.visible && !this.isCurrentHash()) {
+				this.$emit("close");
+			}
+			if (this.popId && this.visiblePop && !this.isCurrentHash()) {
+				this.closeFilterBox()
+			}
+		},
+		//  URL中是否有当前弹窗的hash值
+		isCurrentHash() {
+			let hash = '';
+			if(this.id) {
+				hash = this.id && this.$route.hash.split("#").includes(this.id);
+			} else if(this.popId) { 
+				hash = this.popId && this.$route.hash.split("#").includes(this.popId);
+			}
+			return hash ? true : false;
+		},
+	},
+};

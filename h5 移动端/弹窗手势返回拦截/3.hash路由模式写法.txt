@@ -1,0 +1,106 @@
+import { $Component } from 'src/utils/proxy.js';
+import { Block } from '@tarojs/components';
+import React from 'react';
+import Taro from '@tarojs/taro';
+import withWeapp from '@tarojs/with-weapp';
+import { history } from '@tarojs/router'
+import Navigation from 'src/utils/navigation';
+import System from 'src/utils/System';
+
+// 自增id 分配给每个虚拟页面
+let popId = 0;
+
+class _HistoryPopup extends React.Component {
+  constructor() {
+    super(...arguments);
+
+    // 是否已执行被动页面回退回调
+    this.isPoped = false;
+
+    // 唯一标识
+    this.popId = popId++ + '';
+
+    // 推入页面栈
+    this.pushState();
+
+    // 页面回退回调
+    this.popCb = (event) => {
+      const preHash = Navigation.currentHash;
+      const currentHash = window.location.hash;
+
+      console.log(11111, preHash, currentHash)
+
+      // 虚拟页面回退 阻塞框架层逻辑
+      if (preHash.includes('_pop') && preHash.includes(currentHash)) {
+        return true;
+      }
+    }
+
+    // hashchange回调
+    this.hashChangeCb = (event) => {
+      const oldURL = event.oldURL || '';
+      const newURL = event.newURL || '';
+
+      console.log(22222, oldURL, newURL)
+
+      // 虚拟页面回退 通知父级pop
+      if (oldURL.includes(`_pop${this.popId}`) && oldURL.includes(newURL)) {
+        const popId = oldURL.replace(`${newURL}&_pop`, '');
+    console.log(33333, popId, this.popId)
+        if (popId === this.popId) {
+          this.handlePop();
+    
+          return true;
+        }
+      }
+    }
+
+    this.initPopListener();
+  }
+
+  componentWillUnmount() {
+    // 组件主动销毁时，移除当前虚拟页面
+    if (!this.isPoped) {
+      window.history.back();
+
+      // 阻塞框架层逻辑
+      Navigation.hideListener.push(...['hashchange','popstate']);
+    }
+
+    // window.removeEventListener('hashchange', this.hashChangeCb,{custom: true});
+    window.removeEventListener('popstate', this.popCb,{custom: true});
+  }
+
+  handlePop() {
+    this.isPoped = true;
+    this.props.onPop?.call();
+  }
+
+  initPopListener() {
+    // window.addEventListener('hashchange', this.hashChangeCb, { custom: true });
+    window.addEventListener('popstate', this.popCb, { custom: true });
+  }
+
+  pushState() {
+    const newHash = `${window.location.hash}&_pop${this.popId}`;
+    window.history.pushState({ modal: true }, 'history push', newHash);
+
+    Navigation.currentHash = newHash;
+  }
+
+  render() {
+    return <Block>
+      {this.props.children}
+    </Block>;
+  }
+}
+
+// 虚拟页面回退组件
+class HistoryPopup extends React.Component {
+  render() {
+    return System.isTApp() || true? <_HistoryPopup onPop={this.props.onPop}>
+      {this.props.children}
+    </_HistoryPopup>:<Block>{this.props.children}</Block>;
+  }
+}
+export default HistoryPopup;

@@ -1,0 +1,14 @@
+1.安装过程可百度，一般默认即可，问题不大
+
+2.配置git信息，生成ssh秘钥（git bash中操作）
+
+git config --global user.name "your name"
+git config --global user.email "your email"
+ssh-keygen
+后续直接回车，则在.ssh文件夹中生成秘钥，可供版本控制软件结合，方便代码提交
+
+3.添加自己的公钥到git服务器
+登录自己的git账号，在个人设置中添加自己的ssh，复制.ssh文件下的id_rsa.pub内容
+
+4.本地版本控制软件添加ssh
+sourcetree在工具中添加ssh秘钥，选中.ssh下的id_rsa文件添加即可
