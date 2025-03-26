@@ -1,0 +1,13 @@
+移动端上，存在设置某块区域横向滚动，竖向拖动该区域，发现竖向不跟随滚动
+
+解决：
+移动端上可以显式声明touch-action
+
+添加样式
+touch-action: pan-y pan-x;
+注意，此样式需要添加  overflow-y: hidden; 才能生效
+
+即完整样式：
+overflow-x: auto;
+overflow-y: hidden;
+touch-action: pan-y pan-x;

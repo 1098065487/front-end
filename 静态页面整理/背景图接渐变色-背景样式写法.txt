@@ -1,0 +1,11 @@
+写弹窗时，很多时候遇到一种场景，在弹窗背景，开头先是一张背景图，然后接入一段渐变色，最后接入背景灰色
+
+这种有一个样式写下来的方法
+
+background-image支持用逗号隔开拼接多个背景，这边使用一张背景图及一个渐变色实现
+
+比如：
+background: url(https://file.40017.cn/img140017cnproduct/cn/s/2024/cash/top-cashbg.png) no-repeat top /100% 425px, linear-gradient(180deg, transparent 0%, transparent 104px, #f5f5f5 200px);
+
+先以背景图置顶放置，宽度100%，高度425px
+再来一层渐变背景在底下，从0-104px都是透明色，104-200px渐变为#f5f5f5，后面都是#f5f5f5
